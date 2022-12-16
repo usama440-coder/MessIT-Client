@@ -1,0 +1,45 @@
+.dashboard {
+    display: flex;
+}
+
+ .dashboardContainer {
+    padding: 30px 20px;
+    /* border: 2px solid black; */
+    width: 100%;
+} 
+
+.dashboardWrapper {
+    /* border: 2px solid red; */
+    max-width: 1200px;
+    margin: auto;
+}
+
+.statsContainer {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.graphContainer {
+    /* border: 2px solid red; */
+    display: flex;
+    gap: 20px;
+    /* max-width: 700px; */
+}
+
+.lineChart, .pieChart {
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    /* padding: 30px; */
+}
+
+
+.lineChart {
+    /* padding: 10px; */
+    flex:2;
+}
+
+.pieChart {
+    flex: 1;
+}

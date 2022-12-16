@@ -1,0 +1,14 @@
+.users {
+    display: flex;
+}
+
+.usersContainer {
+    padding: 30px 20px;
+    width: 100%;
+}
+
+.usersWrapper {
+    max-width: 1200px;
+    margin: auto
+}
+

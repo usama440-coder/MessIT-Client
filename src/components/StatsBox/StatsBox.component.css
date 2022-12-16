@@ -1,0 +1,53 @@
+
+.statsItem {
+    min-width: 300px;
+    background-color: var(--white-color);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px;
+    border-radius: 10px;
+}
+
+.redBorder {
+    border-left: 4px solid var(--red-color);
+}
+
+.greenBorder {
+    
+    border-left: 4px solid var(--green-color);
+}
+
+.purpleBorder {
+    border-left: 4px solid var(--purple-color);
+
+}
+
+.red {
+    color: var(--red-color);
+}
+.green {
+    color: var(--green-color);
+}
+.purple {
+    color: var(--purple-color);
+}
+
+.statsIcon {
+    font-size: 40px;
+}
+
+.statsItemContent {
+    font-family: 'Exo 2', sans-serif;
+    opacity: 0.7;
+}
+
+.statsItemContent h2 {
+    font-size: 35px;
+}
+
+.statsItemContent p {
+    font-size: 16px;
+    font-weight: 500;
+}

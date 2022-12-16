@@ -1,0 +1,20 @@
+.meal {
+    display: flex;
+}
+
+.mealContainer {
+    padding: 30px 20px;
+    width: 100%;
+}
+
+.mealWrapper {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* current meal */
+.currentMealContainer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}

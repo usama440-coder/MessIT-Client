@@ -1,0 +1,17 @@
+/* button */
+.addBtn {
+    background: var(--primary-color);
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+    color: var(--white-color);
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.addBtn:hover {
+    background-color: var(--hover-primary-btn);
+}

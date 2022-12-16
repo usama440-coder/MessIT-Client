@@ -1,0 +1,15 @@
+.headerGreeting {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 25px;
+    color: var(--primary-color);
+    line-height: 1.4;
+}
+
+.headerRole {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 16px;
+    color: #000000;
+    opacity: 0.5;
+    text-transform: uppercase;
+    font-weight: 600;
+}
