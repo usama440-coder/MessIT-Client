@@ -1,8 +1,15 @@
 import "./CurrentMeal.component.css";
-
+import StartMealModal from "../../components/StartMealModal/StartMealModal.component";
+import { useState } from "react";
 const CurrentMeal = () => {
+  const [modal, setModal] = useState(false);
+
   return (
     <div className="currentMealItem">
+      <button className="currentMealStartBtn" onClick={() => setModal(true)}>
+        Start
+      </button>
+      {modal ? <StartMealModal setModal={setModal} /> : ""}
       <table>
         <tbody>
           <tr>

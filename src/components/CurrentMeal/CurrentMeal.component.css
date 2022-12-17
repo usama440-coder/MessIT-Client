@@ -6,6 +6,7 @@
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     border-left: 5px solid var(--red-color);
+    position: relative;
 }
 
 .currentMealItem table {
@@ -55,4 +56,23 @@
     cursor: pointer;
     background-color: var(--primary-color);
     color: var(--white-color);
+}
+
+.currentMealStartBtn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 2px 10px;
+    font-size: 12px;
+    background-color: var(--primary-color);
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    color: var(--white-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.currentMealStartBtn:hover {
+    cursor: pointer;
+    background-color: var(--hover-primary-btn);
 }

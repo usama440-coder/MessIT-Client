@@ -4,6 +4,8 @@ import Greeting from "../../components/Greeting/Greeting.component";
 import Navbar from "../../components/Navbar/Navbar.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateMealModal from "../../components/CreateMealModal/CreateMealModal.component";
+import { Scrollbars } from "react-custom-scrollbars-2";
+import { FaRegEye } from "react-icons/fa";
 import "./Meal.page.css";
 import { useState } from "react";
 
@@ -27,6 +29,72 @@ const Meal = () => {
             <CurrentMeal />
             <CurrentMeal />
           </div>
+          <SectionBreak title="Previous meals" />
+          <Scrollbars
+            autoHeight
+            autoHeightMin={300}
+            autoHeightMax={1000}
+            autoHide
+          >
+            <table className="table" cellSpacing={0}>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Total Users</th>
+                  <th>Total Items</th>
+                  <th>Units</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Lunch</td>
+                  <td>70</td>
+                  <td>2</td>
+                  <td>220</td>
+                  <td>
+                    <FaRegEye className="tableIcon orangeIcon" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lunch</td>
+                  <td>70</td>
+                  <td>2</td>
+                  <td>220</td>
+                  <td>
+                    <FaRegEye className="tableIcon orangeIcon" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lunch</td>
+                  <td>70</td>
+                  <td>2</td>
+                  <td>220</td>
+                  <td>
+                    <FaRegEye className="tableIcon orangeIcon" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lunch</td>
+                  <td>70</td>
+                  <td>2</td>
+                  <td>220</td>
+                  <td>
+                    <FaRegEye className="tableIcon orangeIcon" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lunch</td>
+                  <td>70</td>
+                  <td>2</td>
+                  <td>220</td>
+                  <td>
+                    <FaRegEye className="tableIcon orangeIcon" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Scrollbars>
         </div>
       </div>
     </div>

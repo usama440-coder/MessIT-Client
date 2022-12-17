@@ -1,0 +1,66 @@
+    .select__value-container {
+        padding: 0px !important;
+    }
+
+    .modalContainer {
+        max-width: 600px !important;
+    }
+
+    .startMealItemsContainer {
+        /* border: 2px solid red; */
+        display: flex;
+        gap: 15px;
+        padding: 10px 0px 0px 0px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .textChecked {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .startMealItem {
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        max-width: 150px;
+        min-width: 150px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 5px;
+        position: relative;
+    }
+
+    .startMealItem .startMealItemIcon {
+        font-size: 30px;
+        color: var(--gray-color);
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .startMealItem .startMealItemIcon:hover {
+        color: var(--hover-primary-btn);
+    }
+
+    .startMealItem .startMealItemText {
+        color: var(--gray-text);
+        text-align: center;
+        padding: 0px 3px;
+    }
+
+    .startMealItemQuantity {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background-color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white-color);
+        border-radius: 50%;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
