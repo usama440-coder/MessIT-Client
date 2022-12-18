@@ -39,7 +39,12 @@ const CurrentMeal = () => {
           </tr>
           <tr>
             <td>On/Off</td>
-            <td>Check Box</td>
+            <td>
+              <label className="switch">
+                <input type="checkbox" />
+                <span className="slider round"></span>
+              </label>
+            </td>
           </tr>
         </tbody>
       </table>
