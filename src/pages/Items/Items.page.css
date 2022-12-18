@@ -1,0 +1,14 @@
+.items {
+    display: flex;
+}
+
+.itemsContainer {
+    padding: 30px 20px;
+    width: 100%;
+}
+
+.itemsWrapper {
+    max-width: 1200px;
+    margin: auto
+}
+

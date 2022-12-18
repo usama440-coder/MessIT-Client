@@ -48,13 +48,13 @@ const Navbar = () => {
                 </Link>
               </div>
               <div className="menuItem ">
-                <Link to="/meal" className="link">
+                <Link to="/menu" className="link">
                   <FaBars className="navIcon" />
                   <p className="navName">Menu</p>
                 </Link>
               </div>
               <div className="menuItem">
-                <Link to="/meal" className="link">
+                <Link to="/items" className="link">
                   <FaBox className="navIcon" />
                   <p className="navName">Items</p>
                 </Link>

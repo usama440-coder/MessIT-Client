@@ -30,6 +30,32 @@ const Meal = () => {
             <CurrentMeal />
           </div>
           <SectionBreak title="Previous meals" />
+          <div className="tableFilters">
+            <div className="showEntries">
+              <p className="showEntries">Show Entries</p>
+              <input className="showEntriesInput" type="text" />
+            </div>
+            <div className="filters">
+              <select
+                className="filtersSelect"
+                name="type"
+                defaultValue={"Type"}
+              >
+                <option name="select" id="select" disabled>
+                  Type
+                </option>
+                <option name="breakfast" id="breakfast">
+                  Breakfast
+                </option>
+                <option name="lunch" id="lunch">
+                  Lunch
+                </option>
+                <option name="dinner" id="dinner">
+                  Dinner
+                </option>
+              </select>
+            </div>
+          </div>
           <Scrollbars
             autoHeight
             autoHeightMin={300}
