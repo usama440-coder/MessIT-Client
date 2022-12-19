@@ -60,19 +60,19 @@ const Navbar = () => {
                 </Link>
               </div>
               <div className="menuItem">
-                <Link to="/meal" className="link">
+                <Link to="/profile" className="link">
                   <FaUser className="navIcon" />
                   <p className="navName">Profile</p>
                 </Link>
               </div>
               <div className="menuItem">
-                <Link to="/meal" className="link">
+                <Link to="/billing" className="link">
                   <FaMoneyCheckAlt className="navIcon" />
                   <p className="navName">Billing</p>
                 </Link>
               </div>
               <div className="menuItem">
-                <Link to="/meal" className="link">
+                <Link to="/about" className="link">
                   <FaInfoCircle className="navIcon" />
                   <p className="navName">About</p>
                 </Link>

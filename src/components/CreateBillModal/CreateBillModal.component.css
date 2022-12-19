@@ -1,0 +1,16 @@
+.billRadio {
+    display: flex;
+    gap: 10px;
+    /* flex-direction: column; */
+}
+
+.billRadio div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.billRadio div p{
+    color: var(--gray-text);
+    
+}
