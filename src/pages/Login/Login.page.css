@@ -1,0 +1,60 @@
+.login {
+    height: 100vh;
+    border: 2px solid red;
+    display: flex;
+}
+
+.loginContainer {
+    background-color: var(--white-color);
+    width: 900px;
+    border-radius: 10px;
+    margin: auto;
+    display: flex;
+    box-shadow: var(--box-shadow);
+}
+
+
+.loginLottie {
+    flex: 3;
+    /* background-color: var(--primary-color); */
+    border-radius: 10px 0px 0px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm {
+    flex: 2.5;
+    border-radius: 0px 10px 10px 0px;
+    padding: 50px 30px;
+}
+
+.modalBtn {
+    width: 100%;
+}
+
+.loginHeading {
+    font-size: 25px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+.loginForm form div{
+    margin: 10px 0px;
+}
+
+.resetPassword {
+    color: var(--purple-color);
+    margin-top: 20px;
+    cursor: pointer;   
+    text-align: right;
+}
+
+.resetPassword:hover {
+    color: var(--primary-color);
+}
+
+.lottie {
+    width: 300px;
+
+}
