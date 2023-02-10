@@ -97,13 +97,34 @@ Link {
 }
 
 .table td, th {
-    padding: 10px;
-    text-align: center;
+    padding: 10px 15px;
+    text-align: left;
 }
+
 
 .table tr td {
     opacity: 0.8;
     border-bottom: 1px solid var(--gray-color);
+}
+
+.table tr td .badge{
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 2px 4px;
+    color: var(--white-color);
+    border-radius: 20px;
+}
+
+.badgeCell {
+    text-align: center !important;
+}
+
+.table tr td .badge-green {
+    background-color: var(--green-color);
+}
+
+.table tr td .badge-red {
+    background-color: var(--red-color);
 }
 
 .tableIcon {
@@ -263,3 +284,7 @@ Link {
     background-color: var(--hover-primary-btn);
 }
 
+.loader {
+    display: flex;
+    justify-content: center;
+}

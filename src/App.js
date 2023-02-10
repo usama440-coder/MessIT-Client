@@ -10,6 +10,7 @@ import Profile from "./pages/Profile/Profile.page";
 import Billing from "./pages/Billing/Billing.page";
 import About from "./pages/About/About.page";
 import Login from "./pages/Login/Login.page";
+import Mess from "./pages/Mess/Mess.page";
 import Protected from "./components/Protected";
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/billing" element={<Billing />}></Route>
           <Route path="/about" element={<About />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/mess" element={<Mess />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

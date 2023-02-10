@@ -77,6 +77,12 @@ const Navbar = () => {
                   <p className="navName">About</p>
                 </Link>
               </div>
+              <div className="menuItem">
+                <Link to="/mess" className="link">
+                  <FaInfoCircle className="navIcon" />
+                  <p className="navName">Mess</p>
+                </Link>
+              </div>
             </div>
 
             <div className="logout">

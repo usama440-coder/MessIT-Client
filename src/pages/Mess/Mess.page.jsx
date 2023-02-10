@@ -1,8 +1,8 @@
-import "./Users.page.css";
+import "./Mess.page.css";
 import Navbar from "../../components/Navbar/Navbar.component";
 import Greeting from "../../components/Greeting/Greeting.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
-import CreateUserModal from "../../components/CreateUserModal/CreateUserModal.component";
+import CreateMessModal from "../../components/CreateMessModal/CreateMessModal.component";
 import AddButton from "../../components/AddButton/AddButton.component";
 import Loader from "../../components/Loders";
 import { useState, useEffect } from "react";
@@ -12,7 +12,7 @@ import { FaEdit, FaTrashAlt, FaRegEye } from "react-icons/fa";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import toast from "react-hot-toast";
 
-const Users = () => {
+const Mess = () => {
   const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
   const [usersData, setUsersData] = useState([]);
@@ -46,7 +46,7 @@ const Users = () => {
         <div className="usersWrapper">
           <Greeting />
           <SectionBreak title="users" />
-          {modal ? <CreateUserModal setModal={setModal} /> : ""}
+          {modal ? <CreateMessModal setModal={setModal} /> : ""}
           <AddButton handleClick={handleClick} />
 
           {loading ? (
@@ -138,4 +138,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Mess;
