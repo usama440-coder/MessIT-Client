@@ -8,6 +8,7 @@ import Loader from "../../components/Loders";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import userService from "../../services/userService";
+import messService from "../../services/messService";
 import { FaEdit, FaTrashAlt, FaRegEye } from "react-icons/fa";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import toast from "react-hot-toast";
@@ -16,6 +17,7 @@ const Users = () => {
   const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
   const [usersData, setUsersData] = useState([]);
+  const [messData, setMessData] = useState([]);
   const [loading, setLoading] = useState("false");
   const [error, setError] = useState("");
 
@@ -23,12 +25,24 @@ const Users = () => {
     setModal(true);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await userService.deleteUser(id, token);
+      toast.success("User deleted successfully");
+      setUsersData(usersData?.filter((user) => user._id !== id));
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
   useEffect(() => {
     const getUsersData = async () => {
       try {
         setLoading(true);
         const usersData = await userService.getUsers(token);
+        const messData = await messService.getAllMess(token);
         setUsersData(usersData.data.users);
+        setMessData(messData.data.mess);
         setLoading(false);
       } catch (err) {
         toast.error(err.response.message);
@@ -46,7 +60,15 @@ const Users = () => {
         <div className="usersWrapper">
           <Greeting />
           <SectionBreak title="users" />
-          {modal ? <CreateUserModal setModal={setModal} /> : ""}
+          {modal ? (
+            <CreateUserModal
+              setModal={setModal}
+              usersData={usersData}
+              messData={messData}
+            />
+          ) : (
+            ""
+          )}
           <AddButton handleClick={handleClick} />
 
           {loading ? (
@@ -103,7 +125,7 @@ const Users = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {usersData.map((user) => {
+                    {usersData?.map((user) => {
                       return (
                         <tr key={user.email}>
                           <td>{user.name}</td>
@@ -121,7 +143,10 @@ const Users = () => {
 
                           <td>
                             <FaEdit className="tableIcon greenIcon" />
-                            <FaTrashAlt className="tableIcon redIcon" />
+                            <FaTrashAlt
+                              className="tableIcon redIcon"
+                              onClick={() => handleDelete(user._id)}
+                            />
                             <FaRegEye className="tableIcon orangeIcon" />
                           </td>
                         </tr>

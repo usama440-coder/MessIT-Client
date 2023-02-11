@@ -16,9 +16,18 @@ const addUser = (data, token) => {
   });
 };
 
+const deleteUser = (id, token) => {
+  return http.delete(`/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const userService = {
   getUsers,
   addUser,
+  deleteUser,
 };
 
 export default userService;

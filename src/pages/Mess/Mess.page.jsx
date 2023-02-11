@@ -7,15 +7,15 @@ import AddButton from "../../components/AddButton/AddButton.component";
 import Loader from "../../components/Loders";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import userService from "../../services/userService";
-import { FaEdit, FaTrashAlt, FaRegEye } from "react-icons/fa";
+import messService from "../../services/messService";
+import { FaEdit } from "react-icons/fa";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import toast from "react-hot-toast";
 
 const Mess = () => {
   const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
-  const [usersData, setUsersData] = useState([]);
+  const [messData, setMessData] = useState([]);
   const [loading, setLoading] = useState("false");
   const [error, setError] = useState("");
 
@@ -24,19 +24,19 @@ const Mess = () => {
   };
 
   useEffect(() => {
-    const getUsersData = async () => {
+    const getMessData = async () => {
       try {
         setLoading(true);
-        const usersData = await userService.getUsers(token);
-        setUsersData(usersData.data.users);
+        const messData = await messService.getAllMess(token);
+        setMessData(messData.data.mess);
         setLoading(false);
       } catch (err) {
-        toast.error(err.response.message);
+        toast.error(err.response.data.message);
         setLoading(false);
         setError(err.response.message);
       }
     };
-    getUsersData();
+    getMessData();
   }, [token]);
 
   return (
@@ -45,45 +45,18 @@ const Mess = () => {
       <div className="usersContainer">
         <div className="usersWrapper">
           <Greeting />
-          <SectionBreak title="users" />
-          {modal ? <CreateMessModal setModal={setModal} /> : ""}
+          <SectionBreak title="mess" />
+          {modal ? (
+            <CreateMessModal setModal={setModal} messData={messData} />
+          ) : (
+            ""
+          )}
           <AddButton handleClick={handleClick} />
 
           {loading ? (
             <Loader />
           ) : (
             <>
-              <div className="tableFilters">
-                <div className="showEntries">
-                  <p className="showEntries">Show Entries</p>
-                  <input className="showEntriesInput" type="text" />
-                </div>
-                <div className="filters">
-                  <input
-                    className="filtersSearch"
-                    type="text"
-                    placeholder="Search User ID"
-                  />
-                  <select
-                    className="filtersSelect"
-                    name="mess"
-                    defaultValue={"Mess"}
-                  >
-                    <option name="select" id="select" disabled>
-                      Mess
-                    </option>
-                    <option name="ABE" id="ABE">
-                      ABE
-                    </option>
-                    <option name="CD" id="CD">
-                      CD
-                    </option>
-                    <option name="JH" id="JH">
-                      JH
-                    </option>
-                  </select>
-                </div>
-              </div>
               <Scrollbars
                 autoHeight
                 autoHeightMin={300}
@@ -94,35 +67,22 @@ const Mess = () => {
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Email</th>
-                      <th>Contact</th>
-                      <th>Role</th>
-                      <th>Mess</th>
-                      <th></th>
+                      <th>Users</th>
+                      <th>Active</th>
+                      <th>Inactive</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {usersData.map((user) => {
+                    {messData.map((mess) => {
                       return (
-                        <tr key={user.email}>
-                          <td>{user.name}</td>
-                          <td>{user.email}</td>
-                          <td>{user.contact}</td>
-                          <td>{user.role}</td>
-                          <td>{user.messData.name}</td>
-                          <td className="badgeCell">
-                            {user.isActive ? (
-                              <span className="badge badge-green">Active</span>
-                            ) : (
-                              <span className="badge badge-red">Inactive</span>
-                            )}
-                          </td>
-
+                        <tr key={mess._id}>
+                          <td>{mess.name}</td>
+                          <td>{100}</td>
+                          <td>{80}</td>
+                          <td>{20}</td>
                           <td>
                             <FaEdit className="tableIcon greenIcon" />
-                            <FaTrashAlt className="tableIcon redIcon" />
-                            <FaRegEye className="tableIcon orangeIcon" />
                           </td>
                         </tr>
                       );
