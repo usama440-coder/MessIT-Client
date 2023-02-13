@@ -2,8 +2,14 @@ import Greeting from "../../components/Greeting/Greeting.component";
 import Navbar from "../../components/Navbar/Navbar.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import "./Profile.page.css";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Profile = () => {
+  const [userData, setUserData] = useState({});
+  const location = useLocation();
+  console.log(location);
+
   return (
     <div className="profile">
       <Navbar />

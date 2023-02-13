@@ -1,9 +1,9 @@
 import "./AddButton.component.css";
 
-const AddButton = ({ handleClick }) => {
+const AddButton = ({ title, handleClick }) => {
   return (
     <button className="addBtn" onClick={handleClick}>
-      + Add New
+      + {title}
     </button>
   );
 };

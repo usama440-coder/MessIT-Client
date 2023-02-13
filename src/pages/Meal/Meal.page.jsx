@@ -4,16 +4,45 @@ import Greeting from "../../components/Greeting/Greeting.component";
 import Navbar from "../../components/Navbar/Navbar.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateMealModal from "../../components/CreateMealModal/CreateMealModal.component";
+import CreateMealTypeModal from "../../components/CreateMealType/CreateMealTypeModal.component";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { FaRegEye } from "react-icons/fa";
 import "./Meal.page.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import messService from "../../services/messService";
+import mealTypeService from "../../services/mealTypeService";
+import { useSelector } from "react-redux";
 
 const Meal = () => {
-  const [modal, setModal] = useState(false);
-  const handleClick = () => {
-    setModal(true);
+  const token = useSelector((state) => state.auth.user.token);
+  const [loading, setLoading] = useState(false);
+  const [messData, setMessData] = useState([]);
+  const [mealsData, setMealsData] = useState([]);
+  const [mealTypeData, setMealTypeData] = useState([]);
+
+  const [modal1, setModal1] = useState(false);
+  const [modal2, setModal2] = useState(false);
+  const handleClick1 = () => {
+    setModal1(true);
   };
+  const handleClick2 = () => {
+    setModal2(true);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const mess = await messService.getAllMess(token);
+        const mealType = await mealTypeService.getMealType(token);
+        setMealTypeData(mealType.data.mealTypes);
+        setMessData(mess.data.mess);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [token]);
 
   return (
     <div className="meal">
@@ -22,8 +51,22 @@ const Meal = () => {
         <div className="mealWrapper">
           <Greeting />
           <SectionBreak title="current meals" />
-          <AddButton handleClick={handleClick} />
-          {modal ? <CreateMealModal setModal={setModal} /> : ""}
+          <AddButton title="Add Meal" handleClick={handleClick1} />
+          <AddButton title="Add Meal Type" handleClick={handleClick2} />
+          {modal1 ? (
+            <CreateMealModal
+              mealTypeData={mealTypeData}
+              messData={messData}
+              setModal1={setModal1}
+            />
+          ) : (
+            ""
+          )}
+          {modal2 ? (
+            <CreateMealTypeModal messData={messData} setModal2={setModal2} />
+          ) : (
+            ""
+          )}
           <div className="currentMealContainer">
             <CurrentMeal />
             <CurrentMeal />

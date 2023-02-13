@@ -51,7 +51,7 @@ const Mess = () => {
           ) : (
             ""
           )}
-          <AddButton handleClick={handleClick} />
+          <AddButton title="Create New" handleClick={handleClick} />
 
           {loading ? (
             <Loader />

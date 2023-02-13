@@ -16,6 +16,14 @@ const addUser = (data, token) => {
   });
 };
 
+const updateUser = (id, data, token) => {
+  return http.put(`/users/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const deleteUser = (id, token) => {
   return http.delete(`/users/${id}`, {
     headers: {
@@ -27,6 +35,7 @@ const deleteUser = (id, token) => {
 const userService = {
   getUsers,
   addUser,
+  updateUser,
   deleteUser,
 };
 

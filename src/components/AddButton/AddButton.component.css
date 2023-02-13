@@ -10,6 +10,7 @@
     margin-bottom: 20px;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    margin-right: 10px;
 }
 
 .addBtn:hover {

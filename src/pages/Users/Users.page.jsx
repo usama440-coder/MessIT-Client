@@ -3,6 +3,7 @@ import Navbar from "../../components/Navbar/Navbar.component";
 import Greeting from "../../components/Greeting/Greeting.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateUserModal from "../../components/CreateUserModal/CreateUserModal.component";
+import EditUserModal from "../../components/EditUserModal/EditUserModal.component";
 import AddButton from "../../components/AddButton/AddButton.component";
 import Loader from "../../components/Loders";
 import { useState, useEffect } from "react";
@@ -14,15 +15,16 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import toast from "react-hot-toast";
 
 const Users = () => {
-  const [modal, setModal] = useState(false);
+  const [createUserModal, setCreateUserModal] = useState(false);
+  const [editUserModal, setEditUserModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
   const [usersData, setUsersData] = useState([]);
   const [messData, setMessData] = useState([]);
+  const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState("false");
-  const [error, setError] = useState("");
 
   const handleClick = () => {
-    setModal(true);
+    setCreateUserModal(true);
   };
 
   const handleDelete = async (id) => {
@@ -35,6 +37,11 @@ const Users = () => {
     }
   };
 
+  const handleUserEdit = (user) => {
+    setUserData(user);
+    setEditUserModal(() => true);
+  };
+
   useEffect(() => {
     const getUsersData = async () => {
       try {
@@ -45,9 +52,8 @@ const Users = () => {
         setMessData(messData.data.mess);
         setLoading(false);
       } catch (err) {
-        toast.error(err.response.message);
+        toast.error(err.response.data.message);
         setLoading(false);
-        setError(err.response.message);
       }
     };
     getUsersData();
@@ -60,16 +66,25 @@ const Users = () => {
         <div className="usersWrapper">
           <Greeting />
           <SectionBreak title="users" />
-          {modal ? (
+          {createUserModal ? (
             <CreateUserModal
-              setModal={setModal}
+              setCreateUserModal={setCreateUserModal}
               usersData={usersData}
               messData={messData}
             />
           ) : (
             ""
           )}
-          <AddButton handleClick={handleClick} />
+          {editUserModal ? (
+            <EditUserModal
+              setEditUserModal={setEditUserModal}
+              messData={messData}
+              userData={userData}
+            />
+          ) : (
+            ""
+          )}
+          <AddButton title="Add User" handleClick={handleClick} />
 
           {loading ? (
             <Loader />
@@ -142,7 +157,10 @@ const Users = () => {
                           </td>
 
                           <td>
-                            <FaEdit className="tableIcon greenIcon" />
+                            <FaEdit
+                              className="tableIcon greenIcon"
+                              onClick={() => handleUserEdit(user)}
+                            />
                             <FaTrashAlt
                               className="tableIcon redIcon"
                               onClick={() => handleDelete(user._id)}

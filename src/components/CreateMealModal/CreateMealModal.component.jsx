@@ -16,20 +16,42 @@ const mealOptions = [
   { value: "chicken pulao", label: "Chicken Pulao" },
 ];
 
-const CreateMealModal = ({ setModal }) => {
+const CreateMealModal = ({ mealTypeData, messData, setModal1 }) => {
   return (
     <div className="modal">
       <div className="modalContainer">
         <h2 className="modalHeading">Create a new meal</h2>
-        <FaTimes className="modalCross" onClick={() => setModal(false)} />
+        <FaTimes className="modalCross" onClick={() => setModal1(false)} />
         <form>
+          <div className="inputContainer">
+            <label>Mess</label>
+            <select name="mess" defaultValue="none">
+              <option value="none" disabled>
+                None
+              </option>
+              {messData?.map((mess) => {
+                return (
+                  <option key={mess?._id} value={mess?._id}>
+                    {mess?.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           <div className="splitInputs">
             <div className="inputContainer">
-              <label>Mess</label>
-              <select>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Lunch">Lunch</option>
-                <option value="Dinner">Dinner</option>
+              <label>Type</label>
+              <select name="mess" defaultValue="none">
+                <option value="none" disabled>
+                  None
+                </option>
+                {mealTypeData?.map((type) => {
+                  return (
+                    <option key={type?._id} value={type?._id}>
+                      {type?.type}
+                    </option>
+                  );
+                })}
               </select>
             </div>
             <div className="inputContainer">
@@ -67,6 +89,7 @@ const CreateMealModal = ({ setModal }) => {
               <input type="datetime-local" />
             </div>
           </div>
+
           <button className="modalBtn">Save</button>
         </form>
       </div>
