@@ -7,7 +7,7 @@
     }
 
     .startMealItemsContainer {
-        /* border: 2px solid red; */
+        border: 2px solid red;
         display: flex;
         gap: 15px;
         padding: 10px 0px 0px 0px;
@@ -23,13 +23,13 @@
     .startMealItem {
         border: 2px solid var(--primary-color);
         border-radius: 10px;
-        max-width: 150px;
+        /* max-width: 150px; */
         min-width: 150px;
         height: 70px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0px 5px;
+        /* padding: 0px 5px; */
         position: relative;
     }
 

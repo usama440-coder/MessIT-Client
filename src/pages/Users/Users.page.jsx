@@ -13,10 +13,12 @@ import messService from "../../services/messService";
 import { FaEdit, FaTrashAlt, FaRegEye } from "react-icons/fa";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import toast from "react-hot-toast";
+import ConfirmDeleteUserModal from "../../components/ConfirmModal/ConfirmDeleteUserModal.component";
 
 const Users = () => {
   const [createUserModal, setCreateUserModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
   const [usersData, setUsersData] = useState([]);
   const [messData, setMessData] = useState([]);
@@ -27,14 +29,9 @@ const Users = () => {
     setCreateUserModal(true);
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await userService.deleteUser(id, token);
-      toast.success("User deleted successfully");
-      setUsersData(usersData?.filter((user) => user._id !== id));
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
-    }
+  const handleDelete = (user) => {
+    setUserData(user);
+    setConfirmModal(() => true);
   };
 
   const handleUserEdit = (user) => {
@@ -43,7 +40,7 @@ const Users = () => {
   };
 
   useEffect(() => {
-    const getUsersData = async () => {
+    const fetchUsersData = async () => {
       try {
         setLoading(true);
         const usersData = await userService.getUsers(token);
@@ -56,7 +53,7 @@ const Users = () => {
         setLoading(false);
       }
     };
-    getUsersData();
+    fetchUsersData();
   }, [token]);
 
   return (
@@ -66,6 +63,16 @@ const Users = () => {
         <div className="usersWrapper">
           <Greeting />
           <SectionBreak title="users" />
+          {confirmModal ? (
+            <ConfirmDeleteUserModal
+              userData={userData}
+              setConfirmModal={setConfirmModal}
+              setUsersData={setUsersData}
+              usersData={usersData}
+            />
+          ) : (
+            ""
+          )}
           {createUserModal ? (
             <CreateUserModal
               setCreateUserModal={setCreateUserModal}
@@ -163,7 +170,7 @@ const Users = () => {
                             />
                             <FaTrashAlt
                               className="tableIcon redIcon"
-                              onClick={() => handleDelete(user._id)}
+                              onClick={() => handleDelete(user)}
                             />
                             <FaRegEye className="tableIcon orangeIcon" />
                           </td>

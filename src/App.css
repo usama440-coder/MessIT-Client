@@ -184,6 +184,13 @@ Link {
     color: var(--primary-color);
 }
 
+.modalStatement {
+    opacity: 0.8;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
 .modalCross {
     position: absolute;
     top: 10px;
@@ -202,6 +209,7 @@ Link {
     flex-direction: column;
     gap: 10px;
 }
+
 
 .inputContainer {
     display: flex;
@@ -277,6 +285,12 @@ Link {
     font-size: 16px;
     transition: background-color 0.2s ease-in-out;
     margin-top: 10px;
+}
+
+.modalBtn:disabled {
+    cursor: not-allowed;
+    pointer-events: none !important;
+    opacity: 0.7;
 }
 
 .modalBtn:hover {

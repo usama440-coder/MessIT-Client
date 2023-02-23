@@ -6,38 +6,59 @@ import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateMealModal from "../../components/CreateMealModal/CreateMealModal.component";
 import CreateMealTypeModal from "../../components/CreateMealType/CreateMealTypeModal.component";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import { FaRegEye } from "react-icons/fa";
+import { FaRegEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import "./Meal.page.css";
 import { useState, useEffect } from "react";
-import messService from "../../services/messService";
 import mealTypeService from "../../services/mealTypeService";
 import { useSelector } from "react-redux";
+import itemService from "../../services/itemService";
+import mealService from "../../services/mealService";
+import Loader from "../../components/Loders";
+import userMealService from "../../services/userMealService";
 
 const Meal = () => {
   const token = useSelector((state) => state.auth.user.token);
   const [loading, setLoading] = useState(false);
-  const [messData, setMessData] = useState([]);
-  const [mealsData, setMealsData] = useState([]);
-  const [mealTypeData, setMealTypeData] = useState([]);
+  const [currentMealsData, setCurrentMealsData] = useState([]);
+  const [prevMealsData, setPrevMealsData] = useState([]);
+  const [mealTypesData, setMealTypesData] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
+  const [createMealTypeModal, setCreateMealTypeModal] = useState(false);
+  const [createMealModal, setCreateMealModal] = useState(false);
+  const [userMeals, setUserMeals] = useState([]);
 
-  const [modal1, setModal1] = useState(false);
-  const [modal2, setModal2] = useState(false);
-  const handleClick1 = () => {
-    setModal1(true);
+  const format = {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
   };
-  const handleClick2 = () => {
-    setModal2(true);
+
+  const handleCreateMealType = () => {
+    setCreateMealTypeModal(true);
+  };
+  const handleCreateMeal = () => {
+    setCreateMealModal(true);
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(() => true);
       try {
-        const mess = await messService.getAllMess(token);
         const mealType = await mealTypeService.getMealType(token);
-        setMealTypeData(mealType.data.mealTypes);
-        setMessData(mess.data.mess);
+        const items = await itemService.getItems(token);
+        const meals = await mealService.getMeals(token);
+        const userMeals = await userMealService.getAllUserMeals(token);
+        setMealTypesData(mealType?.data?.mealTypes);
+        setItemsData(items?.data?.items);
+        setCurrentMealsData(meals?.data?.currentMeals);
+        setPrevMealsData(meals?.data?.prevMeals);
+        setUserMeals(userMeals?.data?.userMeals);
+        setLoading(() => false);
       } catch (error) {
-        console.log(error);
+        setLoading(() => false);
       }
     };
 
@@ -51,119 +72,164 @@ const Meal = () => {
         <div className="mealWrapper">
           <Greeting />
           <SectionBreak title="current meals" />
-          <AddButton title="Add Meal" handleClick={handleClick1} />
-          <AddButton title="Add Meal Type" handleClick={handleClick2} />
-          {modal1 ? (
+          <AddButton title="Add Meal" handleClick={handleCreateMeal} />
+          <AddButton title="Add Meal Type" handleClick={handleCreateMealType} />
+          {createMealModal ? (
             <CreateMealModal
-              mealTypeData={mealTypeData}
-              messData={messData}
-              setModal1={setModal1}
+              mealTypesData={mealTypesData}
+              itemsData={itemsData}
+              setCreateMealModal={setCreateMealModal}
             />
           ) : (
             ""
           )}
-          {modal2 ? (
-            <CreateMealTypeModal messData={messData} setModal2={setModal2} />
+          {createMealTypeModal ? (
+            <CreateMealTypeModal
+              setCreateMealTypeModal={setCreateMealTypeModal}
+            />
           ) : (
             ""
           )}
-          <div className="currentMealContainer">
-            <CurrentMeal />
-            <CurrentMeal />
-            <CurrentMeal />
-          </div>
-          <SectionBreak title="Previous meals" />
-          <div className="tableFilters">
-            <div className="showEntries">
-              <p className="showEntries">Show Entries</p>
-              <input className="showEntriesInput" type="text" />
-            </div>
-            <div className="filters">
-              <select
-                className="filtersSelect"
-                name="type"
-                defaultValue={"Type"}
+
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              <div className="currentMealContainer">
+                {currentMealsData?.map((meal) => {
+                  return (
+                    <CurrentMeal
+                      key={meal._id}
+                      meal={meal}
+                      mealTypesData={mealTypesData}
+                      itemsData={itemsData}
+                    />
+                  );
+                })}
+              </div>
+              <SectionBreak title="Meal types" />
+              <Scrollbars
+                autoHeight
+                autoHeightMin={50}
+                autoHeightMax={1000}
+                autoHide
               >
-                <option name="select" id="select" disabled>
-                  Type
-                </option>
-                <option name="breakfast" id="breakfast">
-                  Breakfast
-                </option>
-                <option name="lunch" id="lunch">
-                  Lunch
-                </option>
-                <option name="dinner" id="dinner">
-                  Dinner
-                </option>
-              </select>
-            </div>
-          </div>
-          <Scrollbars
-            autoHeight
-            autoHeightMin={300}
-            autoHeightMax={1000}
-            autoHide
-          >
-            <table className="table" cellSpacing={0}>
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Total Users</th>
-                  <th>Total Items</th>
-                  <th>Units</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Lunch</td>
-                  <td>70</td>
-                  <td>2</td>
-                  <td>220</td>
-                  <td>
-                    <FaRegEye className="tableIcon orangeIcon" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Lunch</td>
-                  <td>70</td>
-                  <td>2</td>
-                  <td>220</td>
-                  <td>
-                    <FaRegEye className="tableIcon orangeIcon" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Lunch</td>
-                  <td>70</td>
-                  <td>2</td>
-                  <td>220</td>
-                  <td>
-                    <FaRegEye className="tableIcon orangeIcon" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Lunch</td>
-                  <td>70</td>
-                  <td>2</td>
-                  <td>220</td>
-                  <td>
-                    <FaRegEye className="tableIcon orangeIcon" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Lunch</td>
-                  <td>70</td>
-                  <td>2</td>
-                  <td>220</td>
-                  <td>
-                    <FaRegEye className="tableIcon orangeIcon" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </Scrollbars>
+                <table className="table" cellSpacing={0}>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mealTypesData?.map((mealType) => (
+                      <tr key={mealType._id}>
+                        <td>{mealType?.type}</td>
+                        <td>
+                          <FaEdit className="tableIcon greenIcon" />
+                          <FaTrashAlt className="tableIcon redIcon" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Scrollbars>
+              <SectionBreak title="Previous meals" />
+              <div className="tableFilters">
+                <div className="showEntries">
+                  <p className="showEntries">Show Entries</p>
+                  <input className="showEntriesInput" type="text" />
+                </div>
+                <div className="filters">
+                  <select
+                    className="filtersSelect"
+                    name="type"
+                    defaultValue={"Type"}
+                  >
+                    <option name="select" id="select" disabled>
+                      Type
+                    </option>
+                    <option name="breakfast" id="breakfast">
+                      Breakfast
+                    </option>
+                    <option name="lunch" id="lunch">
+                      Lunch
+                    </option>
+                    <option name="dinner" id="dinner">
+                      Dinner
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <Scrollbars
+                autoHeight
+                autoHeightMin={300}
+                autoHeightMax={1000}
+                autoHide
+              >
+                <table className="table" cellSpacing={0}>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Items</th>
+                      <th>Serving Time</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {userMeals?.map((meal) => {
+                      return (
+                        <tr>
+                          <td>{meal?.mealData?.type}</td>
+                          <td>{meal?.mealData?.items?.length}</td>
+                          <td>
+                            {new Date(meal?.mealData?.updatedAt).toLocaleString(
+                              "en-US",
+                              format
+                            )}
+                          </td>
+                          <td>
+                            <FaRegEye className="tableIcon orangeIcon" />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Scrollbars>
+              <Scrollbars
+                autoHeight
+                autoHeightMin={300}
+                autoHeightMax={1000}
+                autoHide
+              >
+                <table className="table" cellSpacing={0}>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Items</th>
+                      <th>Users</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {prevMealsData?.map((meal) => {
+                      return (
+                        <tr key={meal?._id}>
+                          <td>{meal?.type}</td>
+                          <td>{meal?.items?.length}</td>
+                          <td>{meal?.totalUsers}</td>
+                          <td>
+                            <FaRegEye className="tableIcon orangeIcon" />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Scrollbars>
+            </>
+          )}
         </div>
       </div>
     </div>

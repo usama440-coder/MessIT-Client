@@ -16,9 +16,27 @@ const getItems = (token) => {
   });
 };
 
+const updateItem = (id, data, token) => {
+  return http.put(`/items/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const deleteItem = (id, token) => {
+  return http.delete(`/items/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const itemService = {
   addItem,
   getItems,
+  updateItem,
+  deleteItem,
 };
 
 export default itemService;

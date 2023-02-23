@@ -1,6 +1,6 @@
 /* Current Meal */
 .currentMealItem {
-    min-width: 350px;
+    width: 350px;
     padding: 15px;
     background-color: var(--white-color);
     border-radius: 10px;
@@ -17,14 +17,14 @@
 
 .currentMealItem table tr {
     vertical-align: center;
-}
-
-
-.currentMealItem > table tr td {
-    /* border: 2px solid gray; */
+  }
+  
+  
+  .currentMealItem > table tr td {
     padding: 2px 0px;
     color: var(--gray-text);
     vertical-align: top;
+    /* border: 2px solid red; */
 }
 
 .currentMealItem table tr td:nth-child(1) {
@@ -63,7 +63,7 @@
     color: var(--white-color);
 }
 
-.currentMealStartBtn {
+.badge {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -77,9 +77,28 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.currentMealStartBtn:hover {
+.badge:hover {
     cursor: pointer;
     background-color: var(--hover-primary-btn);
+}
+
+.editBadge {
+  position: absolute;
+  right: 105px;
+  top: 10px;
+  font-size: 18px;
+}
+
+.editBadge:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.currentMealTotalUsers {
+  position: absolute;
+  right: 60px;
+  background-color: var(--orange-color);
+  min-width: 40px;
 }
 
 

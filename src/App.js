@@ -12,6 +12,7 @@ import About from "./pages/About/About.page";
 import Login from "./pages/Login/Login.page";
 import Mess from "./pages/Mess/Mess.page";
 import Protected from "./components/Protected";
+import UserMeals from "./pages/UserMeals/UserMeals.page";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/about" element={<About />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/mess" element={<Mess />}></Route>
+          <Route path="/userMeals/:id" element={<UserMeals />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

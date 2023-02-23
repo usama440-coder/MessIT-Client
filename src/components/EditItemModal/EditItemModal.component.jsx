@@ -1,13 +1,15 @@
 import { FaTimes } from "react-icons/fa";
-import "./CreateItemModal.component.css";
-import itemService from "../../services/itemService";
 import { useState } from "react";
+import itemService from "../../services/itemService";
 import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
-const CreateItemModal = ({ setCreateItemModal }) => {
+const EditItemModal = ({ setEditItemModal, itemData }) => {
   const token = useSelector((state) => state.auth.user.token);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: itemData?.name || "",
+    units: itemData?.units || 0,
+  });
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -17,12 +19,11 @@ const CreateItemModal = ({ setCreateItemModal }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await itemService.addItem(formData, token);
-      setFormData({});
-      toast.success("Item added successfully");
-      window.location.reload();
+      const res = await itemService.updateItem(itemData._id, formData, token);
+      console.log(res);
+      toast.success("Item updated successfully");
+      setEditItemModal(false);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -31,14 +32,14 @@ const CreateItemModal = ({ setCreateItemModal }) => {
   return (
     <div className="modal">
       <div className="modalContainer">
-        <h2 className="modalHeading">Create a new item</h2>
+        <h2 className="modalHeading">Edit a user</h2>
         <FaTimes
           className="modalCross"
-          onClick={() => setCreateItemModal(false)}
+          onClick={() => setEditItemModal(false)}
         />
         <form>
           <div className="inputContainer">
-            <label>Item Name</label>
+            <label>Name</label>
             <input
               type="text"
               name="name"
@@ -48,15 +49,16 @@ const CreateItemModal = ({ setCreateItemModal }) => {
             />
           </div>
           <div className="inputContainer">
-            <label>Item Units</label>
+            <label>Units</label>
             <input
               type="number"
               name="units"
               id="units"
-              value={formData?.units}
               onChange={handleChange}
+              value={formData?.units || ""}
             />
           </div>
+
           <button className="modalBtn" onClick={handleSubmit}>
             Save
           </button>
@@ -66,4 +68,4 @@ const CreateItemModal = ({ setCreateItemModal }) => {
   );
 };
 
-export default CreateItemModal;
+export default EditItemModal;

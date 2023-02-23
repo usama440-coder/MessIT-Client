@@ -2,18 +2,22 @@ import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import "./CreateMealModal.component.css";
 import mealService from "../../services/mealService";
 import { toast } from "react-hot-toast";
 
-const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
-  const [selectOptions, setSelectOptions] = useState([]);
+const EditMealModal = ({
+  mealTypesData,
+  itemsData,
+  setEditMealModal,
+  mealData,
+}) => {
+  const [selectOptions, setSelectOptions] = useState(mealData?.items || []);
   const token = useSelector((state) => state.auth.user.token);
   const [formData, setFormData] = useState({
-    type: "",
-    validFrom: "",
-    validUntil: "",
-    closingTime: "",
+    type: mealData?.type || "",
+    validFrom: mealData?.validFrom || "",
+    validUntil: mealData?.validUntil || "",
+    closingTime: mealData?.closingTime || "",
   });
 
   const handleChange = (e) => {
@@ -28,8 +32,12 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
       return { itemId: item?._id };
     });
     try {
-      const res = await mealService.createMeal({ ...formData, items }, token);
-      toast.success("Meal added successfully");
+      const res = await mealService.updateMeal(
+        mealData?._id,
+        { ...formData, items },
+        token
+      );
+      toast.success("Meal updated successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
@@ -38,10 +46,10 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
   return (
     <div className="modal">
       <div className="modalContainer">
-        <h2 className="modalHeading">Create a new meal</h2>
+        <h2 className="modalHeading">Edit a meal</h2>
         <FaTimes
           className="modalCross"
-          onClick={() => setCreateMealModal(false)}
+          onClick={() => setEditMealModal(false)}
         />
         <form>
           <div className="splitInputs">
@@ -65,7 +73,7 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
               <input
                 type="datetime-local"
                 name="closingTime"
-                value={formData?.closingTime || ""}
+                value={formData?.closingTime}
                 onChange={handleChange}
               />
             </div>
@@ -79,6 +87,7 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
               isMulti
               className="basic-multi-select"
               classNamePrefix="select"
+              defaultValue={mealData?.items}
               placeholder=""
               onChange={setSelectOptions}
               styles={{
@@ -122,4 +131,4 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
   );
 };
 
-export default CreateMealModal;
+export default EditMealModal;

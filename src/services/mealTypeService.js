@@ -8,8 +8,17 @@ const getMealType = (token) => {
   });
 };
 
+const createMealType = (data, token) => {
+  return http.post("/mealType", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const mealTypeService = {
   getMealType,
+  createMealType,
 };
 
 export default mealTypeService;

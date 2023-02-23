@@ -9,28 +9,39 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import "./Items.page.css";
 import itemService from "../../services/itemService";
 import { useSelector } from "react-redux";
-import messService from "../../services/messService";
 import Loader from "../../components/Loders";
+import EditItemModal from "../../components/EditItemModal/EditItemModal.component";
+import ConfirmDeleteItemModal from "../../components/ConfirmModal/ConfirmDeleteItemModal";
 
 const Items = () => {
   const token = useSelector((state) => state.auth.user.token);
-  const [modal, setModal] = useState(false);
+  const [createItemModal, setCreateItemModal] = useState(false);
+  const [editItemModal, setEditItemModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
   const [itemsData, setItemsData] = useState([]);
-  const [messData, setMessData] = useState([]);
+  const [itemData, setItemData] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleClick = () => {
-    setModal(true);
+    setCreateItemModal(true);
+  };
+
+  const handleDelete = (item) => {
+    setItemData(item);
+    setConfirmModal(() => true);
+  };
+
+  const handleItemEdit = (item) => {
+    setItemData(item);
+    setEditItemModal(() => true);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchItemsData = async () => {
       try {
         setLoading(true);
         const items = await itemService.getItems(token);
-        const mess = await messService.getAllMess(token);
         setItemsData(items?.data?.items);
-        setMessData(mess?.data?.mess);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -38,7 +49,7 @@ const Items = () => {
       }
     };
 
-    fetchData();
+    fetchItemsData();
   }, [token]);
 
   return (
@@ -48,8 +59,28 @@ const Items = () => {
         <div className="itemsWrapper">
           <Greeting />
           <SectionBreak title="items" />
-          {modal ? (
-            <CreateItemModal setModal={setModal} messData={messData} />
+          {editItemModal ? (
+            <EditItemModal
+              itemData={itemData}
+              itemsData={itemsData}
+              setEditItemModal={setEditItemModal}
+            />
+          ) : (
+            ""
+          )}
+          {createItemModal ? (
+            <CreateItemModal setCreateItemModal={setCreateItemModal} />
+          ) : (
+            ""
+          )}
+
+          {confirmModal ? (
+            <ConfirmDeleteItemModal
+              itemsData={itemsData}
+              itemData={itemData}
+              setConfirmModal={setConfirmModal}
+              setItemsData={setItemsData}
+            />
           ) : (
             ""
           )}
@@ -79,11 +110,16 @@ const Items = () => {
                       <tr key={item._id}>
                         <td>{item.name}</td>
                         <td>{item.units}</td>
-                        <td>{3.2}</td>
-                        <td>{item.messData.name}</td>
+                        <td>{0}</td>
                         <td>
-                          <FaEdit className="tableIcon greenIcon" />
-                          <FaTrashAlt className="tableIcon redIcon" />
+                          <FaEdit
+                            className="tableIcon greenIcon"
+                            onClick={() => handleItemEdit(item)}
+                          />
+                          <FaTrashAlt
+                            className="tableIcon redIcon"
+                            onClick={() => handleDelete(item)}
+                          />
                           <FaRegEye className="tableIcon orangeIcon" />
                         </td>
                       </tr>
