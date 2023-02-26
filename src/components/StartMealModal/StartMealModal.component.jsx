@@ -22,16 +22,23 @@ const StartMealModal = ({ meal, setStartMealModal }) => {
       );
       setCurrUserMealData(res?.data?.singleUserMeal[0] || {});
 
-      // map item ids to to meal to get name of items
-      let temp = res?.data?.singleUserMeal[0]?.items?.map((item) => {
-        let temp2 = meal?.items?.find((i) => i._id === item.itemId);
-        if (temp2?.name) {
-          item.name = temp2.name;
-        }
-        return item;
-      });
+      /*Prev Code ------------------*/
 
-      setUserMealItems(temp || []);
+      // map item ids to to meal to get name of items
+      // let temp = res?.data?.singleUserMeal[0]?.items?.map((item) => {
+      //   let temp2 = meal?.items?.find((i) => i._id === item.itemId);
+      //   if (temp2?.name) {
+      //     item.name = temp2.name;
+      //   }
+      //   return item;
+      // });
+
+      // setUserMealItems(temp || []);
+
+      /*Prev Code ------------------ end*/
+
+      /*New Code ------------------*/
+      setUserMealItems(res?.data?.singleUserMeal[0]?.items || []);
     } catch (error) {
       setCurrUserMealData({});
       setUserMealItems([]);
@@ -125,7 +132,7 @@ const StartMealModal = ({ meal, setStartMealModal }) => {
               <div className="textChecked">
                 <input
                   type="text"
-                  value={currUserMealData?.userData?.name}
+                  value={currUserMealData?.user?.name}
                   disabled
                 />
                 <input type="checkbox" />

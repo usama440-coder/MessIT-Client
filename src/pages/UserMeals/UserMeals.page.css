@@ -1,0 +1,49 @@
+.userMeal {
+    display: flex;
+}
+
+.userMealContainer {
+    padding: 30px 20px;
+    width: 100%;
+}
+
+.userMealWrapper {
+    max-width: 1000px;
+    margin: auto;
+    background-color: white;
+}
+
+.userMealWrapper h2 {
+    padding: 10px;
+    text-align: center;
+}
+
+.userMealItems {
+    padding: 20px;
+    text-align: center;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.userMealHeader {
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.userMealWrapper table {
+    font-size: 15px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.userMealHeader {
+    display: flex;
+    justify-content: center;
+    padding: 20px
+}
+
+.userMealWrapper table td {
+    padding: 10px;
+    border: 1px solid var(--gray-color);
+}

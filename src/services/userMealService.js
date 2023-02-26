@@ -17,6 +17,7 @@ const getUserMeal = (id, token) => {
 };
 
 const getSingleUserMeal = (id, data, token) => {
+  // console.log(id, data, token);
   return http.post(`/userMeal/user/${id}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,

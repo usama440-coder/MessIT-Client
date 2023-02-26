@@ -15,6 +15,8 @@ import itemService from "../../services/itemService";
 import mealService from "../../services/mealService";
 import Loader from "../../components/Loders";
 import userMealService from "../../services/userMealService";
+import { Link } from "react-router-dom";
+import ViewUserMealModal from "../../components/ViewModal/ViewUserMealModal.component";
 
 const Meal = () => {
   const token = useSelector((state) => state.auth.user.token);
@@ -26,6 +28,8 @@ const Meal = () => {
   const [createMealTypeModal, setCreateMealTypeModal] = useState(false);
   const [createMealModal, setCreateMealModal] = useState(false);
   const [userMeals, setUserMeals] = useState([]);
+  const [viewUserMealModal, setViewUserMealModal] = useState(false);
+  const [currUserMeal, setCurrUserMeal] = useState("");
 
   const format = {
     month: "short",
@@ -49,12 +53,13 @@ const Meal = () => {
       try {
         const mealType = await mealTypeService.getMealType(token);
         const items = await itemService.getItems(token);
-        const meals = await mealService.getMeals(token);
+        const currMeals = await mealService.getCurrentMeals(token);
+        const prevMeals = await mealService.getPreviousMeals(token);
         const userMeals = await userMealService.getAllUserMeals(token);
         setMealTypesData(mealType?.data?.mealTypes);
         setItemsData(items?.data?.items);
-        setCurrentMealsData(meals?.data?.currentMeals);
-        setPrevMealsData(meals?.data?.prevMeals);
+        setCurrentMealsData(currMeals?.data?.currentMeals);
+        setPrevMealsData(prevMeals?.data?.previousMeals);
         setUserMeals(userMeals?.data?.userMeals);
         setLoading(() => false);
       } catch (error) {
@@ -64,6 +69,11 @@ const Meal = () => {
 
     fetchData();
   }, [token]);
+
+  const handleClick = (id) => {
+    setCurrUserMeal(id);
+    setViewUserMealModal(true);
+  };
 
   return (
     <div className="meal">
@@ -86,6 +96,15 @@ const Meal = () => {
           {createMealTypeModal ? (
             <CreateMealTypeModal
               setCreateMealTypeModal={setCreateMealTypeModal}
+            />
+          ) : (
+            ""
+          )}
+
+          {viewUserMealModal ? (
+            <ViewUserMealModal
+              userMealId={currUserMeal}
+              setViewUserMealModal={setViewUserMealModal}
             />
           ) : (
             ""
@@ -189,7 +208,10 @@ const Meal = () => {
                             )}
                           </td>
                           <td>
-                            <FaRegEye className="tableIcon orangeIcon" />
+                            <FaRegEye
+                              className="tableIcon orangeIcon"
+                              onClick={() => handleClick(meal?.mealData?._id)}
+                            />
                           </td>
                         </tr>
                       );
@@ -220,7 +242,12 @@ const Meal = () => {
                           <td>{meal?.items?.length}</td>
                           <td>{meal?.totalUsers}</td>
                           <td>
-                            <FaRegEye className="tableIcon orangeIcon" />
+                            <Link
+                              to={`/userMeals/${meal?._id}`}
+                              target="_blank"
+                            >
+                              <FaRegEye className="tableIcon orangeIcon" />
+                            </Link>
                           </td>
                         </tr>
                       );

@@ -8,8 +8,16 @@ const createMeal = (data, token) => {
   });
 };
 
-const getMeals = (token) => {
-  return http.get("/meal", {
+const getCurrentMeals = (token) => {
+  return http.get("/meal/current", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const getPreviousMeals = (token) => {
+  return http.get("/meal/previous", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -24,10 +32,20 @@ const updateMeal = (id, data, token) => {
   });
 };
 
+const getMeal = (id, token) => {
+  return http.get(`/meal/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const mealService = {
   createMeal,
-  getMeals,
+  getCurrentMeals,
+  getPreviousMeals,
   updateMeal,
+  getMeal,
 };
 
 export default mealService;

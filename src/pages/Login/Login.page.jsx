@@ -32,7 +32,7 @@ const Login = () => {
       })
       .catch((err) => {
         toast.dismiss(loggingToast);
-        toast.error(err.message);
+        toast.error(err?.message || "Something went wrong");
         btnRef.current.disabled = false;
       });
   };

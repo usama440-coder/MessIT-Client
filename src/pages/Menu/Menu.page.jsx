@@ -2,10 +2,18 @@ import Greeting from "../../components/Greeting/Greeting.component";
 import Navbar from "../../components/Navbar/Navbar.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionItemHeading,
+  AccordionItemButton,
+  AccordionItemPanel,
+} from "react-accessible-accordion";
 import "./Menu.page.css";
 import AddButton from "../../components/AddButton/AddButton.component";
 import AddMenuModal from "../../components/AddMenuModal/AddMenuModal.component";
 import { useState } from "react";
+import "react-accessible-accordion/dist/fancy-example.css";
 
 const Menu = () => {
   const [modal, setModal] = useState(false);
@@ -22,7 +30,25 @@ const Menu = () => {
           <SectionBreak title="Menu" />
           {modal ? <AddMenuModal setModal={setModal} /> : ""}
           <AddButton handleClick={handleClick} />
-          <table className="table" cellSpacing={0}>
+
+          <Accordion>
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>
+                  What harsh truths do you prefer to ignore?
+                </AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>
+                <p>
+                  Exercitation in fugiat est ut ad ea cupidatat ut in cupidatat
+                  occaecat ut occaecat consequat est minim minim esse tempor
+                  laborum consequat esse adipisicing eu reprehenderit enim.
+                </p>
+              </AccordionItemPanel>
+            </AccordionItem>
+          </Accordion>
+
+          {/* <table className="table" cellSpacing={0}>
             <thead>
               <tr>
                 <th>Day</th>
@@ -94,7 +120,7 @@ const Menu = () => {
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
     </div>
