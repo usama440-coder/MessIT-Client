@@ -12,14 +12,55 @@ import {
 import "./Menu.page.css";
 import AddButton from "../../components/AddButton/AddButton.component";
 import AddMenuModal from "../../components/AddMenuModal/AddMenuModal.component";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "react-accessible-accordion/dist/fancy-example.css";
+import { useSelector } from "react-redux";
+import menuService from "../../services/menuService";
+import EditMenuModal from "../../components/EditMenuModal/EditMenuModal.component";
 
 const Menu = () => {
-  const [modal, setModal] = useState(false);
+  const token = useSelector((state) => state.auth.user.token);
+  const [menuData, setMenuData] = useState([]);
+  const [addMenuModal, setAddMenuModal] = useState(false);
+  const [editMenuModal, setEditMenuModal] = useState(false);
+  const [currMenu, setCurrMenu] = useState({});
+
   const handleClick = () => {
-    setModal(true);
+    setAddMenuModal(true);
   };
+
+  const handleEditMenu = (menu) => {
+    setEditMenuModal(true);
+    setCurrMenu(menu);
+  };
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const res = await menuService.getMenu(token);
+
+        // function to group elements by day
+        const groupedMenu = res?.data?.menu.reduce((acc, cur) => {
+          if (!acc[cur.day]) {
+            acc[cur.day] = {
+              day: cur.day,
+              data: [cur],
+            };
+          } else {
+            acc[cur.day].data.push(cur);
+          }
+          return acc;
+        }, {});
+
+        const result = Object.values(groupedMenu);
+        setMenuData(result || []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchMenu();
+  }, [token]);
 
   return (
     <div className="menu">
@@ -28,99 +69,56 @@ const Menu = () => {
         <div className="menuWrapper">
           <Greeting />
           <SectionBreak title="Menu" />
-          {modal ? <AddMenuModal setModal={setModal} /> : ""}
-          <AddButton handleClick={handleClick} />
+          {addMenuModal ? (
+            <AddMenuModal setAddMenuModal={setAddMenuModal} />
+          ) : (
+            ""
+          )}
+          {editMenuModal ? (
+            <EditMenuModal
+              setEditMenuModal={setEditMenuModal}
+              currMenu={currMenu}
+            />
+          ) : (
+            ""
+          )}
+          <AddButton handleClick={handleClick} title="Add Menu" />
 
-          <Accordion>
-            <AccordionItem>
-              <AccordionItemHeading>
-                <AccordionItemButton>
-                  What harsh truths do you prefer to ignore?
-                </AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                <p>
-                  Exercitation in fugiat est ut ad ea cupidatat ut in cupidatat
-                  occaecat ut occaecat consequat est minim minim esse tempor
-                  laborum consequat esse adipisicing eu reprehenderit enim.
-                </p>
-              </AccordionItemPanel>
-            </AccordionItem>
+          <Accordion allowZeroExpanded={true}>
+            {menuData?.map((menu) => {
+              return (
+                <AccordionItem>
+                  <AccordionItemHeading>
+                    <AccordionItemButton>
+                      {menu?.day?.toUpperCase()}
+                    </AccordionItemButton>
+                  </AccordionItemHeading>
+                  <AccordionItemPanel className="menuTypeContainer">
+                    {menu?.data?.map((data) => {
+                      return (
+                        <div className="menuTypeItem">
+                          <FaEdit
+                            className="menuTypeEdit"
+                            onClick={() => handleEditMenu(data)}
+                          />
+                          <h4>{data?.type?.type?.toUpperCase()}</h4>
+                          <p>
+                            {data?.items?.map((item) => {
+                              return (
+                                <span>
+                                  {item?.name}({item?.units}){" "}
+                                </span>
+                              );
+                            })}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </AccordionItemPanel>
+                </AccordionItem>
+              );
+            })}
           </Accordion>
-
-          {/* <table className="table" cellSpacing={0}>
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Breakfast</th>
-                <th>Lunch</th>
-                <th>Dinner</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Monday</td>
-                <td>paratha(20) + fried Egg(30) + Tea(10) + Channy(70)</td>
-                <td>roti(20) + chicken boneless(30)</td>
-                <td>roti(20) + chicken pulao(30)</td>
-                <td>
-                  <FaEdit className="tableIcon greenIcon" />
-                  <FaTrashAlt className="tableIcon redIcon" />
-                </td>
-              </tr>
-              <tr>
-                <td>Monday</td>
-                <td>paratha(20) + fried Egg(30) + Tea(10) + Channy(70)</td>
-                <td>roti(20) + chicken boneless(30)</td>
-                <td>roti(20) + chicken pulao(30)</td>
-                <td>
-                  <FaEdit className="tableIcon greenIcon" />
-                  <FaTrashAlt className="tableIcon redIcon" />
-                </td>
-              </tr>
-              <tr>
-                <td>Monday</td>
-                <td>paratha(20) + fried Egg(30) + Tea(10) + Channy(70)</td>
-                <td>roti(20) + chicken boneless(30)</td>
-                <td>roti(20) + chicken pulao(30)</td>
-                <td>
-                  <FaEdit className="tableIcon greenIcon" />
-                  <FaTrashAlt className="tableIcon redIcon" />
-                </td>
-              </tr>
-              <tr>
-                <td>Monday</td>
-                <td>paratha(20) + fried Egg(30) + Tea(10) + Channy(70)</td>
-                <td>roti(20) + chicken boneless(30)</td>
-                <td>roti(20) + chicken pulao(30)</td>
-                <td>
-                  <FaEdit className="tableIcon greenIcon" />
-                  <FaTrashAlt className="tableIcon redIcon" />
-                </td>
-              </tr>
-              <tr>
-                <td>Monday</td>
-                <td>paratha(20) + fried Egg(30) + Tea(10) + Channy(70)</td>
-                <td>roti(20) + chicken boneless(30)</td>
-                <td>roti(20) + chicken pulao(30)</td>
-                <td>
-                  <FaEdit className="tableIcon greenIcon" />
-                  <FaTrashAlt className="tableIcon redIcon" />
-                </td>
-              </tr>
-              <tr>
-                <td>Monday</td>
-                <td>paratha(20) + fried Egg(30) + Tea(10) + Channy(70)</td>
-                <td>roti(20) + chicken boneless(30)</td>
-                <td>roti(20) + chicken pulao(30)</td>
-                <td>
-                  <FaEdit className="tableIcon greenIcon" />
-                  <FaTrashAlt className="tableIcon redIcon" />
-                </td>
-              </tr>
-            </tbody>
-          </table> */}
         </div>
       </div>
     </div>

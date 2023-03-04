@@ -107,7 +107,7 @@ Link {
     border-bottom: 1px solid var(--gray-color);
 }
 
-.table tr td .badge{
+ .tableBadge{
     font-size: 10px;
     text-transform: uppercase;
     padding: 2px 4px;
@@ -119,11 +119,11 @@ Link {
     text-align: center !important;
 }
 
-.table tr td .badge-green {
+ .badge-green {
     background-color: var(--green-color);
 }
 
-.table tr td .badge-red {
+ .badge-red {
     background-color: var(--red-color);
 }
 

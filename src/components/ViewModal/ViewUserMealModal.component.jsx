@@ -28,7 +28,10 @@ const ViewUserMealModal = ({ userMealId, setViewUserMealModal }) => {
   return (
     <div className="modal">
       <div className="modalContainer">
-        <p>Name: Talha Amjad</p>
+        <p>
+          <b>Name: </b>
+          {userMeal?.user?.name}
+        </p>
 
         {userMeal?.items?.map((item) => {
           units += item?.itemQuantity * item?.units;

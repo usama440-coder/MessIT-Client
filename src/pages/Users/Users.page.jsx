@@ -157,9 +157,13 @@ const Users = () => {
                           <td>{user.messData.name}</td>
                           <td className="badgeCell">
                             {user.isActive ? (
-                              <span className="badge badge-green">Active</span>
+                              <span className="tableBadge badge-green">
+                                Active
+                              </span>
                             ) : (
-                              <span className="badge badge-red">Inactive</span>
+                              <span className="tableBadge badge-red">
+                                Inactive
+                              </span>
                             )}
                           </td>
 

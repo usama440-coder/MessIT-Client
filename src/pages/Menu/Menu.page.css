@@ -12,3 +12,23 @@
     margin: auto
 }
 
+.menuTypeContainer {
+    display: flex;
+    gap: 10px;
+
+}
+
+.menuTypeItem {
+    flex: 1;
+    border-right: 1px solid var(--gray-color);
+    padding: 20px;
+    position: relative;
+}
+
+.menuTypeEdit {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: var(--green-color);
+    cursor: pointer;
+}

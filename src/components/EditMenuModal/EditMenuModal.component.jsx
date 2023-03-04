@@ -1,21 +1,21 @@
-import "./AddMenuModal.component.css";
 import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 import mealTypeService from "../../services/mealTypeService";
 import itemService from "../../services/itemService";
 import menuService from "../../services/menuService";
-import { toast } from "react-hot-toast";
 
-const AddMenuModal = ({ setAddMenuModal }) => {
+const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
   const token = useSelector((state) => state.auth.user.token);
   const [selectOptions, setSelectOptions] = useState([]);
   const [mealTypesData, setMealTypesData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [formData, setFormData] = useState({
-    type: "",
-    day: "monday",
+    type: currMenu?.type?.type || "",
+    day: currMenu?.day || "",
+    items: currMenu?.items || [],
   });
 
   useEffect(() => {
@@ -45,7 +45,11 @@ const AddMenuModal = ({ setAddMenuModal }) => {
       return { itemId: item?._id };
     });
     try {
-      const res = await menuService.createMenu({ ...formData, items }, token);
+      const res = await menuService.updateMenu(
+        currMenu._id,
+        { ...formData, items },
+        token
+      );
       toast.success("Menu added successfully");
     } catch (error) {
       console.log(error);
@@ -56,10 +60,10 @@ const AddMenuModal = ({ setAddMenuModal }) => {
   return (
     <div className="modal">
       <div className="modalContainer">
-        <h2 className="modalHeading">Add a menu</h2>
+        <h2 className="modalHeading">Edit a menu</h2>
         <FaTimes
           className="modalCross"
-          onClick={() => setAddMenuModal(false)}
+          onClick={() => setEditMenuModal(false)}
         />
         <form>
           <div className="splitInputs">
@@ -122,4 +126,4 @@ const AddMenuModal = ({ setAddMenuModal }) => {
   );
 };
 
-export default AddMenuModal;
+export default EditMenuModal;
