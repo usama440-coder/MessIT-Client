@@ -28,7 +28,7 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
       return { itemId: item?._id };
     });
     try {
-      const res = await mealService.createMeal({ ...formData, items }, token);
+      await mealService.createMeal({ ...formData, items }, token);
       toast.success("Meal added successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");

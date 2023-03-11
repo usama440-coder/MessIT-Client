@@ -24,10 +24,19 @@ const deleteMess = (id, token) => {
   });
 };
 
+const updateMess = (id, data, token) => {
+  return http.put(`mess/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const messService = {
   getAllMess,
   addMess,
   deleteMess,
+  updateMess,
 };
 
 export default messService;

@@ -6,7 +6,9 @@ const initialState = {
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : {},
+
   error: "",
+  role: localStorage.getItem("role") ? localStorage.getItem("role") : "user",
 };
 
 export const loginUser = createAsyncThunk(
@@ -30,6 +32,10 @@ const authSlice = createSlice({
       state.user = {};
       state.error = "";
       localStorage.clear("user");
+    },
+    setRole: (state, action) => {
+      localStorage.setItem("role", action.payload);
+      state.role = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -55,4 +61,4 @@ const authSlice = createSlice({
 
 const { reducer } = authSlice;
 export default reducer;
-export const { logout } = authSlice.actions;
+export const { logout, setRole } = authSlice.actions;

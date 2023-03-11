@@ -18,8 +18,7 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
-
-  const user = useSelector((state) => state.auth.user.user);
+  const role = useSelector((state) => state.auth.role);
 
   return (
     <>
@@ -39,7 +38,7 @@ const Navbar = () => {
                   <p className="navName">Dashboard</p>
                 </Link>
               </div>
-              {user?.role === "admin" ? (
+              {role === "admin" ? (
                 <>
                   <div className="menuItem">
                     <Link to="/users" className="link">
@@ -56,18 +55,25 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <div className="menuItem">
-                    <Link to="/meal" className="link">
-                      <FaUtensils className="navIcon" />
-                      <p className="navName">Meal</p>
-                    </Link>
-                  </div>
-                  <div className="menuItem ">
-                    <Link to="/menu" className="link">
-                      <FaBars className="navIcon" />
-                      <p className="navName">Menu</p>
-                    </Link>
-                  </div>
+                  {role !== "cashier" ? (
+                    <>
+                      <div className="menuItem">
+                        <Link to="/meal" className="link">
+                          <FaUtensils className="navIcon" />
+                          <p className="navName">Meal</p>
+                        </Link>
+                      </div>
+                      <div className="menuItem ">
+                        <Link to="/menu" className="link">
+                          <FaBars className="navIcon" />
+                          <p className="navName">Menu</p>
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
+
                   <div className="menuItem">
                     <Link to="/items" className="link">
                       <FaBox className="navIcon" />

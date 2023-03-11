@@ -2,7 +2,8 @@ import "./Greeting.component.css";
 import { useSelector } from "react-redux";
 
 const Greeting = () => {
-  const user = useSelector((state) => state.auth.user.user);
+  const { user } = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
   let greeting;
   const hour = new Date().getHours();
   if (hour < 12) {
@@ -18,7 +19,7 @@ const Greeting = () => {
       <h2 className="headerGreeting">{`${greeting} ${
         user.name.split(" ")[0]
       }!`}</h2>
-      <p className="headerRole">{user.role}</p>
+      <p className="headerRole">{role}</p>
     </div>
   );
 };

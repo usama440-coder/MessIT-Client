@@ -4,10 +4,13 @@ import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../slices/auth.slice";
 import toast from "react-hot-toast";
+import { setRole } from "../../slices/auth.slice";
+import UserRoleModal from "../../components/UserRoleModal/UserRoleModal.component";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({});
   const dispatch = useDispatch();
+  const [userRoleModal, setUserRoleModal] = useState(false);
   const btnRef = useRef();
 
   // function to handle input change
@@ -26,8 +29,14 @@ const Login = () => {
     dispatch(loginUser(loginData))
       .unwrap()
       .then((data) => {
-        toast.dismiss(loggingToast);
-        toast.success("Logged in successfully");
+        if (data?.user?.role?.length > 1) {
+          toast.dismiss(loggingToast);
+          setUserRoleModal(true);
+        } else {
+          dispatch(setRole(data?.user?.role));
+          toast.dismiss(loggingToast);
+          toast.success("Logged in successfully");
+        }
         btnRef.current.disabled = false;
       })
       .catch((err) => {
@@ -39,6 +48,11 @@ const Login = () => {
 
   return (
     <div className="login">
+      {userRoleModal ? (
+        <UserRoleModal setUserRoleModal={setUserRoleModal} />
+      ) : (
+        ""
+      )}
       <div className="loginContainer">
         <div className="loginLottie">
           <img src={lottie} alt="lottieAnimation" className="lottie" />

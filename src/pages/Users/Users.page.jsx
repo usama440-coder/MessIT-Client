@@ -1,42 +1,51 @@
 import "./Users.page.css";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { Scrollbars } from "react-custom-scrollbars-2";
+import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar/Navbar.component";
 import Greeting from "../../components/Greeting/Greeting.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
-import CreateUserModal from "../../components/CreateUserModal/CreateUserModal.component";
-import EditUserModal from "../../components/EditUserModal/EditUserModal.component";
 import AddButton from "../../components/AddButton/AddButton.component";
 import Loader from "../../components/Loders";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import ConfirmDeleteUserModal from "../../components/ConfirmModal/ConfirmDeleteUserModal.component";
+import CreateUserModal from "../../components/CreateUserModal/CreateUserModal.component";
+import EditUserModal from "../../components/EditUserModal/EditUserModal.component";
 import userService from "../../services/userService";
 import messService from "../../services/messService";
-import { FaEdit, FaTrashAlt, FaRegEye } from "react-icons/fa";
-import { Scrollbars } from "react-custom-scrollbars-2";
-import toast from "react-hot-toast";
-import ConfirmDeleteUserModal from "../../components/ConfirmModal/ConfirmDeleteUserModal.component";
 
 const Users = () => {
-  const [createUserModal, setCreateUserModal] = useState(false);
-  const [editUserModal, setEditUserModal] = useState(false);
-  const [confirmModal, setConfirmModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
   const [usersData, setUsersData] = useState([]);
   const [messData, setMessData] = useState([]);
   const [userData, setUserData] = useState({});
-  const [loading, setLoading] = useState("false");
+  const [loading, setLoading] = useState(false);
+  const [createUserModal, setCreateUserModal] = useState(false);
+  const [editUserModal, setEditUserModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
 
+  // CreateUserModal state
   const handleClick = () => {
     setCreateUserModal(true);
   };
 
+  // delete user and ConfirmModal
   const handleDelete = (user) => {
     setUserData(user);
     setConfirmModal(() => true);
   };
 
+  // EditUserModal state
   const handleUserEdit = (user) => {
     setUserData(user);
     setEditUserModal(() => true);
+  };
+
+  // update table instantly after API call
+  // in CreateUserModal
+  const updateTable = (newEntry) => {
+    setUsersData([...usersData, newEntry]);
   };
 
   useEffect(() => {
@@ -78,6 +87,7 @@ const Users = () => {
               setCreateUserModal={setCreateUserModal}
               usersData={usersData}
               messData={messData}
+              updateTable={updateTable}
             />
           ) : (
             ""
@@ -153,7 +163,16 @@ const Users = () => {
                           <td>{user.name}</td>
                           <td>{user.email}</td>
                           <td>{user.contact}</td>
-                          <td>{user.role}</td>
+                          <td>
+                            {user.role.map((role) => {
+                              return (
+                                <span key={`${user.email}-${role}`}>
+                                  {role}{" "}
+                                </span>
+                              );
+                            })}
+                          </td>
+
                           <td>{user.messData.name}</td>
                           <td className="badgeCell">
                             {user.isActive ? (
@@ -176,7 +195,6 @@ const Users = () => {
                               className="tableIcon redIcon"
                               onClick={() => handleDelete(user)}
                             />
-                            <FaRegEye className="tableIcon orangeIcon" />
                           </td>
                         </tr>
                       );

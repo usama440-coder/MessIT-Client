@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
-const CreateItemModal = ({ setCreateItemModal }) => {
+const CreateItemModal = ({ setCreateItemModal, updateTable }) => {
   const token = useSelector((state) => state.auth.user.token);
   const [formData, setFormData] = useState({});
 
@@ -19,10 +19,11 @@ const CreateItemModal = ({ setCreateItemModal }) => {
     e.preventDefault();
 
     try {
-      await itemService.addItem(formData, token);
+      const res = await itemService.addItem(formData, token);
       setFormData({});
       toast.success("Item added successfully");
-      window.location.reload();
+      updateTable(res?.data?.item || {});
+      setCreateItemModal(false);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -43,8 +44,8 @@ const CreateItemModal = ({ setCreateItemModal }) => {
               type="text"
               name="name"
               id="name"
-              onChange={handleChange}
               value={formData?.name || ""}
+              onChange={handleChange}
             />
           </div>
           <div className="inputContainer">

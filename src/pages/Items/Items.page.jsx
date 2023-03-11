@@ -4,7 +4,7 @@ import CreateItemModal from "../../components/CreateItemModal/CreateItemModal.co
 import Greeting from "../../components/Greeting/Greeting.component";
 import Navbar from "../../components/Navbar/Navbar.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
-import { FaEdit, FaTrashAlt, FaRegEye } from "react-icons/fa";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import "./Items.page.css";
 import itemService from "../../services/itemService";
@@ -15,6 +15,7 @@ import ConfirmDeleteItemModal from "../../components/ConfirmModal/ConfirmDeleteI
 
 const Items = () => {
   const token = useSelector((state) => state.auth.user.token);
+  const role = useSelector((state) => state.auth.role);
   const [createItemModal, setCreateItemModal] = useState(false);
   const [editItemModal, setEditItemModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
@@ -22,18 +23,26 @@ const Items = () => {
   const [itemData, setItemData] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // createItemModal state
   const handleClick = () => {
     setCreateItemModal(true);
   };
 
+  // ConfirmModal state and set current item to pass on
   const handleDelete = (item) => {
     setItemData(item);
     setConfirmModal(() => true);
   };
 
+  // EditModal state and set current item to pass on
   const handleItemEdit = (item) => {
     setItemData(item);
     setEditItemModal(() => true);
+  };
+
+  // update table instantly
+  const updateTable = (newEntry) => {
+    setItemsData([...itemsData, newEntry]);
   };
 
   useEffect(() => {
@@ -69,7 +78,10 @@ const Items = () => {
             ""
           )}
           {createItemModal ? (
-            <CreateItemModal setCreateItemModal={setCreateItemModal} />
+            <CreateItemModal
+              setCreateItemModal={setCreateItemModal}
+              updateTable={updateTable}
+            />
           ) : (
             ""
           )}
@@ -84,7 +96,13 @@ const Items = () => {
           ) : (
             ""
           )}
-          <AddButton title="Add Item" handleClick={handleClick} />
+
+          {role === "secretary" ? (
+            <AddButton title="Add Item" handleClick={handleClick} />
+          ) : (
+            ""
+          )}
+
           {loading ? (
             <Loader />
           ) : (
@@ -100,8 +118,7 @@ const Items = () => {
                     <th>Name</th>
                     <th>Units</th>
                     <th>Rating</th>
-                    <th>Mess</th>
-                    <th></th>
+                    {role === "secretary" ? <th></th> : ""}
                   </tr>
                 </thead>
                 <tbody>
@@ -111,17 +128,20 @@ const Items = () => {
                         <td>{item.name}</td>
                         <td>{item.units}</td>
                         <td>{0}</td>
-                        <td>
-                          <FaEdit
-                            className="tableIcon greenIcon"
-                            onClick={() => handleItemEdit(item)}
-                          />
-                          <FaTrashAlt
-                            className="tableIcon redIcon"
-                            onClick={() => handleDelete(item)}
-                          />
-                          <FaRegEye className="tableIcon orangeIcon" />
-                        </td>
+                        {role === "secretary" ? (
+                          <td>
+                            <FaEdit
+                              className="tableIcon greenIcon"
+                              onClick={() => handleItemEdit(item)}
+                            />
+                            <FaTrashAlt
+                              className="tableIcon redIcon"
+                              onClick={() => handleDelete(item)}
+                            />
+                          </td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     );
                   })}

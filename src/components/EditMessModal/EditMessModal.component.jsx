@@ -1,13 +1,12 @@
-import "./CreateMessModal.component.css";
 import { FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import messService from "../../services/messService";
 import toast from "react-hot-toast";
 
-const CreateMessModal = ({ setModal, updateTable }) => {
+const EditMessModal = ({ setEditMessModal, messData }) => {
   const token = useSelector((state) => state.auth.user.token);
-  const [mess, setMess] = useState("");
+  const [mess, setMess] = useState(messData.name || "");
 
   const handleChange = (e) => {
     setMess(e.target.value);
@@ -16,10 +15,9 @@ const CreateMessModal = ({ setModal, updateTable }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await messService.addMess({ name: mess }, token);
-      toast.success("Mess addedd successfully");
-      updateTable(res?.data?.mess || {});
-      setModal(false);
+      await messService.updateMess(messData._id, { name: mess }, token);
+      toast.success("Mess updated successfully");
+      setEditMessModal(false);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -28,8 +26,11 @@ const CreateMessModal = ({ setModal, updateTable }) => {
   return (
     <div className="modal">
       <div className="modalContainer">
-        <h2 className="modalHeading">Create a new mess</h2>
-        <FaTimes className="modalCross" onClick={() => setModal(false)} />
+        <h2 className="modalHeading">Edit a mess</h2>
+        <FaTimes
+          className="modalCross"
+          onClick={() => setEditMessModal(false)}
+        />
         <form>
           <div className="inputContainer">
             <label>Name</label>
@@ -50,4 +51,4 @@ const CreateMessModal = ({ setModal, updateTable }) => {
   );
 };
 
-export default CreateMessModal;
+export default EditMessModal;

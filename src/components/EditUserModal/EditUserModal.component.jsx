@@ -1,20 +1,46 @@
 import "./EditUserModal.component.css";
 import { FaTimes } from "react-icons/fa";
 import { useState } from "react";
+import Select from "react-select";
 import userService from "../../services/userService";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 
 const EditUserModal = ({ setEditUserModal, messData, userData }) => {
   const token = useSelector((state) => state.auth.user.token);
+
+  // map current user role to key-value pair
+  const userRoles = userData?.role.map((role) => {
+    return { label: role, value: role };
+  });
+
+  const [selectOptions, setSelectOptions] = useState(userRoles || []);
   const [formData, setFormData] = useState({
     name: userData?.name || "",
     email: userData?.email || "",
     contact: userData?.contact || "",
-    role: userData?.role || "",
     isActive: userData?.isActive,
     mess: userData?.messData?._id || "",
   });
+
+  const roles = [
+    {
+      value: "user",
+      label: "user",
+    },
+    {
+      value: "secretary",
+      label: "secretary",
+    },
+    {
+      value: "cashier",
+      label: "cashier",
+    },
+    {
+      value: "staff",
+      label: "staff",
+    },
+  ];
 
   const handleChange = (e) => {
     let name;
@@ -25,9 +51,21 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
   };
 
   const handleSubmit = async (e) => {
+    // change key-value pair back to an array
+    let role;
+    if (selectOptions.length !== 0) {
+      role = selectOptions.map((role) => {
+        return role.value;
+      });
+    }
+
     e.preventDefault();
     try {
-      const res = await userService.updateUser(userData._id, formData, token);
+      const res = await userService.updateUser(
+        userData._id,
+        { ...formData, role },
+        token
+      );
       console.log(res);
       toast.success("User updated successfully");
       setEditUserModal(false);
@@ -67,6 +105,9 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
                 value={formData?.email || ""}
               />
             </div>
+          </div>
+
+          <div className="splitInputs">
             <div className="inputContainer">
               <label>Contact</label>
               <input
@@ -76,22 +117,6 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
                 onChange={handleChange}
                 value={formData?.contact || ""}
               />
-            </div>
-          </div>
-
-          <div className="splitInputs">
-            <div className="inputContainer">
-              <label>Role</label>
-              <select
-                name="role"
-                onChange={handleChange}
-                defaultValue={formData?.role}
-              >
-                <option value="user">User</option>
-                <option value="secretary">Secretary</option>
-                <option value="staff">Staff</option>
-                <option value="cashier">Cashier</option>
-              </select>
             </div>
             <div className="inputContainer">
               <label>Mess</label>
@@ -108,6 +133,27 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
                 })}
               </select>
             </div>
+          </div>
+          <div className="inputContainer">
+            <label>Select Role(s)</label>
+            <Select
+              options={roles}
+              isMulti
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder=""
+              defaultValue={selectOptions}
+              onChange={setSelectOptions}
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  fontSize: "16px",
+                  border: "none",
+                  placeholder: "Select",
+                  boxShadow: state.isFocused ? null : null,
+                }),
+              }}
+            />
           </div>
           <div
             style={{

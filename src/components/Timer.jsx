@@ -21,7 +21,11 @@ const Timer = ({ deadline }) => {
 
   return (
     <div className="timer">
-      {<p>{`${days}d: ${hours}hr: ${minutes}min: ${seconds}s left`}</p>}
+      {days < 0 ? (
+        ""
+      ) : (
+        <p>{`${days}d: ${hours}hr: ${minutes}min: ${seconds}s left`}</p>
+      )}
     </div>
   );
 };

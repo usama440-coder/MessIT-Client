@@ -6,14 +6,17 @@ import userMealService from "../../services/userMealService";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import EditMealModal from "../EditMealModal/EditMealModal.component";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import ConfirmDeleteMealModal from "../ConfirmModal/ConfirmDeleteMealModal";
 
 const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
   const { token, user } = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
   const [startMealModal, setStartMealModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [editMealModal, setEditMealModal] = useState(false);
+  const [confirmDeleteMealModal, setConfirmDeleteMealModal] = useState(false);
   const format = {
     month: "short",
     day: "2-digit",
@@ -69,23 +72,42 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
 
   return (
     <div className="currentMealItem">
-      <button
-        className="badge currentMealStartBtn"
-        onClick={() => setStartMealModal(true)}
-      >
-        Start
-      </button>
-      <Link to={`/userMeals/${meal?._id}`} target="_blank">
-        <button className="badge currentMealTotalUsers">
-          {meal?.totalUsers}
-        </button>
-      </Link>
-      <FaEdit
-        className="editBadge greenIcon"
-        onClick={() => setEditMealModal(true)}
-      />
+      {role === "staff" ? (
+        <div className="currentMealActions">
+          <FaEdit
+            className="editBadge greenIcon"
+            onClick={() => setEditMealModal(true)}
+          />
+          <FaTrash
+            className="deleteBadge redIcon"
+            onClick={() => setConfirmDeleteMealModal(true)}
+          />
+          <Link to={`/userMeals/${meal?._id}`} target="_blank">
+            <button className="badge currentMealTotalUsers">
+              {meal?.totalUsers}
+            </button>
+          </Link>
+          <button
+            className="badge currentMealStartBtn"
+            onClick={() => setStartMealModal(true)}
+          >
+            Start
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
+
       {startMealModal ? (
         <StartMealModal meal={meal} setStartMealModal={setStartMealModal} />
+      ) : (
+        ""
+      )}
+      {confirmDeleteMealModal ? (
+        <ConfirmDeleteMealModal
+          meal={meal}
+          setConfirmDeleteMealModal={setConfirmDeleteMealModal}
+        />
       ) : (
         ""
       )}
@@ -99,42 +121,38 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
       ) : (
         ""
       )}
-      <table>
-        <tbody>
-          <tr>
-            <td>Type</td>
-            <td>{meal?.type}</td>
-          </tr>
-          <tr>
-            <td>Start Time</td>
-            <td>{new Date(meal?.validFrom).toLocaleString("en-US", format)}</td>
-          </tr>
-          <tr>
-            <td>End Time</td>
-            <td>
-              {new Date(meal?.validUntil).toLocaleString("en-US", format)}
-            </td>
-          </tr>
-          <tr>
-            <td>Items</td>
-            <td>
-              <table>
-                <tbody>
-                  {meal?.items.map((item) => (
-                    <tr key={item._id}>
-                      <td>{item.name}</td>
-                      <td>{item.units}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td>On/Off</td>
-            <td>
+
+      <div className="currentMealDetails">
+        <div className="tableHeader">
+          <div className="currentMealDetailsItem">
+            <p>Type</p>
+            <p>{meal?.type}</p>
+          </div>
+          <div className="currentMealDetailsItem">
+            <p>Start Time</p>
+            <p>{new Date(meal?.validFrom).toLocaleString("en-US", format)}</p>
+          </div>
+          <div className="currentMealDetailsItem">
+            <p>End Time</p>
+            <p>{new Date(meal?.validUntil).toLocaleString("en-US", format)}</p>
+          </div>
+          <div className="currentMealDetailsItem">
+            <p className="currentMealItemsContainer">
+              {meal?.items.map((item) => (
+                <span className="currentMealItems" key={item._id}>
+                  {item.name}
+                  {"("}
+                  {item.units}
+                  {")"}{" "}
+                </span>
+              ))}
+            </p>
+          </div>
+          {role === "user" ? (
+            <div className="closingSwitch">
               <label className="switch">
                 <input
+                  disabled={!(Date.parse(meal?.closingTime) >= Date.now())}
                   type="checkbox"
                   checked={isOpen}
                   name="isOpen"
@@ -143,18 +161,29 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
                 />
                 <span className="slider round"></span>
               </label>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="tableFooter">
-        {Date.parse(meal?.closingTime) >= Date.now() ? (
-          <Timer deadline={meal?.closingTime} />
-        ) : (
-          ""
-        )}
-
-        <button onClick={handleSubmit}>Save</button>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+        <div>
+          <div className=" tableFooter">
+            {Date.parse(meal?.closingTime) >= Date.now() ? (
+              <>
+                <Timer deadline={meal?.closingTime} />
+                {role === "user" ? (
+                  <button className="currentMealSaveBtn" onClick={handleSubmit}>
+                    Save
+                  </button>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              <p>Meal Closed</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

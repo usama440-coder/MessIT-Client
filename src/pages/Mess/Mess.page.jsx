@@ -4,6 +4,7 @@ import Greeting from "../../components/Greeting/Greeting.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateMessModal from "../../components/CreateMessModal/CreateMessModal.component";
 import AddButton from "../../components/AddButton/AddButton.component";
+import EditMessModal from "../../components/EditMessModal/EditMessModal.component";
 import Loader from "../../components/Loders";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -14,15 +15,30 @@ import toast from "react-hot-toast";
 
 const Mess = () => {
   const [modal, setModal] = useState(false);
+  const [editMessModal, setEditMessModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
   const [messData, setMessData] = useState([]);
   const [loading, setLoading] = useState("false");
-  const [error, setError] = useState("");
+  const [currMess, setCurrMess] = useState({});
 
+  // state updates CreateMessModal component
   const handleClick = () => {
     setModal(true);
   };
 
+  // state updates for EditMessModal component
+  const handleEditMess = (mess) => {
+    setCurrMess(mess);
+    setEditMessModal(true);
+  };
+
+  // passing as prop to CreateMessModal
+  // instantly updates the state after API request
+  const updateTable = (newEntry) => {
+    setMessData([...messData, newEntry]);
+  };
+
+  // fetch data of mess
   useEffect(() => {
     const getMessData = async () => {
       try {
@@ -33,7 +49,6 @@ const Mess = () => {
       } catch (err) {
         toast.error(err.response.data.message);
         setLoading(false);
-        setError(err.response.message);
       }
     };
     getMessData();
@@ -47,7 +62,15 @@ const Mess = () => {
           <Greeting />
           <SectionBreak title="mess" />
           {modal ? (
-            <CreateMessModal setModal={setModal} messData={messData} />
+            <CreateMessModal setModal={setModal} updateTable={updateTable} />
+          ) : (
+            ""
+          )}
+          {editMessModal ? (
+            <EditMessModal
+              setEditMessModal={setEditMessModal}
+              messData={currMess}
+            />
           ) : (
             ""
           )}
@@ -68,8 +91,6 @@ const Mess = () => {
                     <tr>
                       <th>Name</th>
                       <th>Users</th>
-                      <th>Active</th>
-                      <th>Inactive</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -78,11 +99,12 @@ const Mess = () => {
                       return (
                         <tr key={mess._id}>
                           <td>{mess.name}</td>
-                          <td>{100}</td>
-                          <td>{80}</td>
-                          <td>{20}</td>
+                          <td>{mess.totalUsers}</td>
                           <td>
-                            <FaEdit className="tableIcon greenIcon" />
+                            <FaEdit
+                              className="tableIcon greenIcon"
+                              onClick={() => handleEditMess(mess)}
+                            />
                           </td>
                         </tr>
                       );

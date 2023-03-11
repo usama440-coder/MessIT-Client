@@ -1,13 +1,35 @@
 import "./CreateUserModal.component.css";
 import { FaTimes } from "react-icons/fa";
+import Select from "react-select";
 import { useState } from "react";
 import userService from "../../services/userService";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 
-const CreateUserModal = ({ setCreateUserModal, usersData, messData }) => {
+const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
   const token = useSelector((state) => state.auth.user.token);
+  const [selectOptions, setSelectOptions] = useState([]);
   const [formData, setFormData] = useState({ role: "user" });
+
+  // roles in key-value pair
+  const roles = [
+    {
+      value: "user",
+      label: "User",
+    },
+    {
+      value: "secretary",
+      label: "Secretary",
+    },
+    {
+      value: "cashier",
+      label: "Cashier",
+    },
+    {
+      value: "staff",
+      label: "Staff",
+    },
+  ];
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -17,13 +39,28 @@ const CreateUserModal = ({ setCreateUserModal, usersData, messData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // convert roles from key-value
+    // back to an array of elements
+    let role;
+    if (selectOptions.length !== 0) {
+      role = selectOptions.map((role) => {
+        return role.value;
+      });
+    }
     try {
-      await userService.addUser(formData, token);
+      const res = await userService.addUser({ ...formData, role }, token);
       toast.success("User addedd successfully");
-      setFormData({ role: "user" });
-      window.location.reload();
+      const tempData = {
+        ...res.data.user,
+        messData: {
+          _id: formData.mess,
+        },
+      };
+      updateTable(tempData);
+      setCreateUserModal(false);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "User cannot be added");
     }
   };
 
@@ -57,36 +94,17 @@ const CreateUserModal = ({ setCreateUserModal, usersData, messData }) => {
                 value={formData?.email || ""}
               />
             </div>
-            <div className="inputContainer">
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                onChange={handleChange}
-                value={formData?.password || ""}
-              />
-            </div>
-          </div>
-          <div className="inputContainer">
-            <label>Contact</label>
-            <input
-              type="text"
-              name="contact"
-              id="contact"
-              onChange={handleChange}
-              value={formData?.contact || ""}
-            />
           </div>
           <div className="splitInputs">
             <div className="inputContainer">
-              <label>Role</label>
-              <select name="role" onChange={handleChange}>
-                <option value="user">User</option>
-                <option value="secretary">Secretary</option>
-                <option value="staff">Staff</option>
-                <option value="cashier">Cashier</option>
-              </select>
+              <label>Contact</label>
+              <input
+                type="text"
+                name="contact"
+                id="contact"
+                onChange={handleChange}
+                value={formData?.contact || ""}
+              />
             </div>
             <div className="inputContainer">
               <label>Mess</label>
@@ -103,6 +121,27 @@ const CreateUserModal = ({ setCreateUserModal, usersData, messData }) => {
                 })}
               </select>
             </div>
+          </div>
+
+          <div className="inputContainer">
+            <label>Select Role(s)</label>
+            <Select
+              options={roles}
+              isMulti
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder=""
+              onChange={setSelectOptions}
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  fontSize: "16px",
+                  border: "none",
+                  placeholder: "Select",
+                  boxShadow: state.isFocused ? null : null,
+                }),
+              }}
+            />
           </div>
           <button className="modalBtn" onClick={handleSubmit}>
             Save

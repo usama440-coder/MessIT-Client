@@ -40,12 +40,21 @@ const getMeal = (id, token) => {
   });
 };
 
+const deleteMeal = (id, token) => {
+  return http.delete(`/meal/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const mealService = {
   createMeal,
   getCurrentMeals,
   getPreviousMeals,
   updateMeal,
   getMeal,
+  deleteMeal,
 };
 
 export default mealService;
