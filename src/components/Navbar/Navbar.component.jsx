@@ -13,12 +13,18 @@ import {
 import { BiDish } from "react-icons/bi";
 import { IoLogOut } from "react-icons/io5";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars-2";
+import { logout } from "../../slices/auth.slice";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const role = useSelector((state) => state.auth.role);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <>
@@ -90,7 +96,7 @@ const Navbar = () => {
               )}
 
               <div className="menuItem">
-                <Link to="/profile/:id" className="link">
+                <Link to="/profile" className="link">
                   <FaUser className="navIcon" />
                   <p className="navName">Profile</p>
                 </Link>
@@ -105,7 +111,7 @@ const Navbar = () => {
             </div>
 
             <div className="logout">
-              <button className="logoutBtn">
+              <button className="logoutBtn" onClick={handleLogout}>
                 <IoLogOut className="navIcon" />
                 <span>Logout</span>
               </button>

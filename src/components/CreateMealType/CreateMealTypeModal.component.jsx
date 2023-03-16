@@ -18,7 +18,7 @@ const CreateMealTypeModal = ({ setCreateMealTypeModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await mealTypeService.createMealType(formData, token);
+      await mealTypeService.createMealType(formData, token);
       toast.success("Meal type added successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");

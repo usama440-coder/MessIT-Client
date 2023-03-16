@@ -9,11 +9,11 @@ import menuService from "../../services/menuService";
 
 const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
   const token = useSelector((state) => state.auth.user.token);
-  const [selectOptions, setSelectOptions] = useState([]);
+  const [selectOptions, setSelectOptions] = useState(currMenu?.items || []);
   const [mealTypesData, setMealTypesData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [formData, setFormData] = useState({
-    type: currMenu?.type?.type || "",
+    type: currMenu?.type?._id || "",
     day: currMenu?.day || "",
     items: currMenu?.items || [],
   });
@@ -45,15 +45,12 @@ const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
       return { itemId: item?._id };
     });
     try {
-      const res = await menuService.updateMenu(
-        currMenu._id,
-        { ...formData, items },
-        token
-      );
-      toast.success("Menu added successfully");
+      await menuService.updateMenu(currMenu._id, { ...formData, items }, token);
+      toast.success("Menu updated successfully");
+      setEditMenuModal(false);
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message || "Something went wrong");
+      setEditMenuModal(false);
     }
   };
 
@@ -105,6 +102,7 @@ const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
               className="basic-multi-select"
               classNamePrefix="select"
               placeholder=""
+              defaultValue={currMenu?.items}
               onChange={setSelectOptions}
               styles={{
                 control: (baseStyles, state) => ({

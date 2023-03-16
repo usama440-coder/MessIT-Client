@@ -32,11 +32,20 @@ const updateMess = (id, data, token) => {
   });
 };
 
+const getMess = (id, token) => {
+  return http.get(`/mess/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const messService = {
   getAllMess,
   addMess,
   deleteMess,
   updateMess,
+  getMess,
 };
 
 export default messService;

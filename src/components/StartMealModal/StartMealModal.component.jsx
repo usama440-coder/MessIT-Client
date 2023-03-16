@@ -95,7 +95,7 @@ const StartMealModal = ({ meal, setStartMealModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await userMealService.updateUserMeal(
+      await userMealService.updateUserMeal(
         currUserMealData?._id,
         { items: userMealItems },
         token

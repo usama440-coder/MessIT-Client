@@ -32,11 +32,20 @@ const updateBill = (id, data, token) => {
   });
 };
 
+const getBill = (id, token) => {
+  return http.get(`/bill/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const billingService = {
   createBill,
   getBills,
   getBalance,
   updateBill,
+  getBill,
 };
 
 export default billingService;

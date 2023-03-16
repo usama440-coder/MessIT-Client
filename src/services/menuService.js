@@ -24,10 +24,19 @@ const updateMenu = (id, data, token) => {
   });
 };
 
+const deleteMenu = (id, token) => {
+  return http.delete(`/menu/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const menuService = {
   createMenu,
   getMenu,
   updateMenu,
+  deleteMenu,
 };
 
 export default menuService;

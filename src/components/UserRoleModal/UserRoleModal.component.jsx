@@ -3,11 +3,13 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { setRole } from "../../slices/auth.slice";
+import { useNavigate } from "react-router-dom";
 
 const UserRoleModal = ({ setUserRoleModal }) => {
   const { user } = useSelector((state) => state.auth.user);
   const [userRole, setUserRole] = useState("user");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ const UserRoleModal = ({ setUserRoleModal }) => {
       dispatch(setRole(userRole));
       toast.success("User logged in successfully");
       setUserRoleModal(false);
+      navigate("/");
     } catch (error) {
       toast.error("Something went wrong");
     }

@@ -1,11 +1,14 @@
 import http from "../http-common";
 
-const getUsers = (token) => {
-  return http.get("/users", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const getUsers = (token, pageNumber, pageSize, mess) => {
+  return http.get(
+    `/users?page=${pageNumber}&pageSize=${pageSize}&mess=${mess}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };
 
 const addUser = (data, token) => {
@@ -32,11 +35,21 @@ const deleteUser = (id, token) => {
   });
 };
 
+const getUser = (id, token) => {
+  console.log(id);
+  return http.get(`/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const userService = {
   getUsers,
   addUser,
   updateUser,
   deleteUser,
+  getUser,
 };
 
 export default userService;

@@ -32,6 +32,14 @@ const Meal = () => {
   const [viewUserMealModal, setViewUserMealModal] = useState(false);
   const [currUserMeal, setCurrUserMeal] = useState("");
 
+  // states for filteration
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(50);
+
+  // pagination
+  const pages = new Array(totalPages).fill(null).map((v, i) => i);
+
   const format = {
     month: "short",
     day: "2-digit",
@@ -62,8 +70,14 @@ const Meal = () => {
         }
 
         if (role === "user") {
-          const userMeals = await userMealService.getAllUserMeals(token);
+          const userMeals = await userMealService.getAllUserMeals(
+            token,
+            pageNumber,
+            pageSize
+          );
           setUserMeals(userMeals?.data?.userMeals);
+          console.log(userMeals);
+          setTotalPages(userMeals?.data?.totalPages);
         }
         setMealTypesData(mealType?.data?.mealTypes);
         setItemsData(items?.data?.items);
@@ -75,7 +89,7 @@ const Meal = () => {
     };
 
     fetchData();
-  }, [token, role]);
+  }, [token, role, pageNumber, pageSize]);
 
   const handleClick = (id) => {
     setCurrUserMeal(id);
@@ -148,110 +162,146 @@ const Meal = () => {
               <SectionBreak title="Previous meals" />
               <div className="tableFilters">
                 <div className="showEntries">
-                  <p className="showEntries">Show Entries</p>
-                  <input className="showEntriesInput" type="text" />
-                </div>
-                <div className="filters">
+                  Show Entries
                   <select
                     className="filtersSelect"
-                    name="type"
-                    defaultValue={"Type"}
+                    name="mess"
+                    defaultValue={pageSize}
+                    onChange={(e) => setPageSize(e.target.value)}
                   >
-                    <option name="select" id="select" disabled>
-                      Type
+                    <option id="select" value={50}>
+                      50
                     </option>
-                    <option name="breakfast" id="breakfast">
-                      Breakfast
+                    <option id="ABE" value={100}>
+                      100
                     </option>
-                    <option name="lunch" id="lunch">
-                      Lunch
-                    </option>
-                    <option name="dinner" id="dinner">
-                      Dinner
+                    <option id="CD" value={200}>
+                      200
                     </option>
                   </select>
                 </div>
+                <div className="filters"></div>
               </div>
               {role === "user" ? (
-                <Scrollbars
-                  autoHeight
-                  autoHeightMin={300}
-                  autoHeightMax={1000}
-                  autoHide
-                >
-                  <table className="table" cellSpacing={0}>
-                    <thead>
-                      <tr>
-                        <th>Type</th>
-                        <th>Items</th>
-                        <th>Serving Time</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {userMeals?.map((meal) => {
-                        return (
-                          <tr>
-                            <td>{meal?.mealData?.type}</td>
-                            <td>{meal?.mealData?.items?.length}</td>
-                            <td>
-                              {new Date(
-                                meal?.mealData?.updatedAt
-                              ).toLocaleString("en-US", format)}
-                            </td>
-                            <td>
-                              <FaRegEye
-                                className="tableIcon orangeIcon"
-                                onClick={() => handleClick(meal?.mealData?._id)}
-                              />
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </Scrollbars>
+                <>
+                  <Scrollbars
+                    autoHeight
+                    autoHeightMin={300}
+                    autoHeightMax={1000}
+                    autoHide
+                  >
+                    <table className="table" cellSpacing={0}>
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Items</th>
+                          <th>Serving Time</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {userMeals?.map((meal) => {
+                          return (
+                            <tr key={meal?._id}>
+                              <td>{meal?.mealData?.type}</td>
+                              <td>{meal?.mealData?.items?.length}</td>
+                              <td>
+                                {new Date(
+                                  meal?.mealData?.updatedAt
+                                ).toLocaleString("en-US", format)}
+                              </td>
+                              <td>
+                                <FaRegEye
+                                  className="tableIcon orangeIcon"
+                                  onClick={() =>
+                                    handleClick(meal?.mealData?._id)
+                                  }
+                                />
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </Scrollbars>
+                  <div className="pagination">
+                    {pages.map((i) => {
+                      return (
+                        <button
+                          key={i}
+                          className={
+                            i === pageNumber
+                              ? "activePagination paginationBtn"
+                              : "paginationBtn"
+                          }
+                          onClick={() => setPageNumber(i)}
+                        >
+                          {i + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
               ) : (
                 ""
               )}
 
               {role === "secretary" || role === "staff" ? (
-                <Scrollbars
-                  autoHeight
-                  autoHeightMin={300}
-                  autoHeightMax={1000}
-                  autoHide
-                >
-                  <table className="table" cellSpacing={0}>
-                    <thead>
-                      <tr>
-                        <th>Type</th>
-                        <th>Items</th>
-                        <th>Users</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {prevMealsData?.map((meal) => {
-                        return (
-                          <tr key={meal?._id}>
-                            <td>{meal?.type}</td>
-                            <td>{meal?.items?.length}</td>
-                            <td>{meal?.totalUsers}</td>
-                            <td>
-                              <Link
-                                to={`/userMeals/${meal?._id}`}
-                                target="_blank"
-                              >
-                                <FaRegEye className="tableIcon orangeIcon" />
-                              </Link>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </Scrollbars>
+                <>
+                  <Scrollbars
+                    autoHeight
+                    autoHeightMin={300}
+                    autoHeightMax={1000}
+                    autoHide
+                  >
+                    <table className="table" cellSpacing={0}>
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Items</th>
+                          <th>Users</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {prevMealsData?.map((meal) => {
+                          return (
+                            <tr key={meal?._id}>
+                              <td>{meal?.type}</td>
+                              <td>{meal?.items?.length}</td>
+                              <td>{meal?.totalUsers}</td>
+                              <td>
+                                <Link
+                                  to={`/userMeals/${meal?._id}`}
+                                  target="_blank"
+                                >
+                                  <FaRegEye className="tableIcon orangeIcon" />
+                                </Link>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </Scrollbars>
+                  <div className="pagination">
+                    {pages.map((i) => {
+                      return (
+                        <button
+                          key={i}
+                          className={
+                            i === pageNumber
+                              ? "activePagination paginationBtn"
+                              : "paginationBtn"
+                          }
+                          onClick={() => setPageNumber(i)}
+                        >
+                          {i + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
               ) : (
                 " "
               )}

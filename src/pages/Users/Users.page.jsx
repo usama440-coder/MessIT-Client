@@ -25,6 +25,15 @@ const Users = () => {
   const [editUserModal, setEditUserModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
 
+  // states for filteration
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(50);
+  const [mess, setMess] = useState("");
+
+  // pagination
+  const pages = new Array(totalPages).fill(null).map((v, i) => i);
+
   // CreateUserModal state
   const handleClick = () => {
     setCreateUserModal(true);
@@ -52,10 +61,16 @@ const Users = () => {
     const fetchUsersData = async () => {
       try {
         setLoading(true);
-        const usersData = await userService.getUsers(token);
+        const usersData = await userService.getUsers(
+          token,
+          pageNumber,
+          pageSize,
+          mess
+        );
         const messData = await messService.getAllMess(token);
         setUsersData(usersData.data.users);
         setMessData(messData.data.mess);
+        setTotalPages(usersData?.data?.totalPages);
         setLoading(false);
       } catch (err) {
         toast.error(err.response.data.message);
@@ -63,7 +78,7 @@ const Users = () => {
       }
     };
     fetchUsersData();
-  }, [token]);
+  }, [token, pageNumber, pageSize, mess]);
 
   return (
     <div className="users">
@@ -109,40 +124,52 @@ const Users = () => {
             <>
               <div className="tableFilters">
                 <div className="showEntries">
-                  <p className="showEntries">Show Entries</p>
-                  <input className="showEntriesInput" type="text" />
-                </div>
-                <div className="filters">
-                  <input
-                    className="filtersSearch"
-                    type="text"
-                    placeholder="Search User ID"
-                  />
+                  Show Entries
                   <select
                     className="filtersSelect"
                     name="mess"
-                    defaultValue={"Mess"}
+                    defaultValue={pageSize}
+                    onChange={(e) => setPageSize(e.target.value)}
                   >
-                    <option name="select" id="select" disabled>
-                      Mess
+                    <option name="select" id="select" value={50}>
+                      50
                     </option>
-                    <option name="ABE" id="ABE">
-                      ABE
+                    <option name="ABE" id="ABE" value={100}>
+                      100
                     </option>
-                    <option name="CD" id="CD">
-                      CD
+                    <option name="CD" id="CD" value={200}>
+                      200
                     </option>
-                    <option name="JH" id="JH">
-                      JH
-                    </option>
+                  </select>
+                </div>
+                <div className="filters">
+                  {/* <input
+                    className="filtersSearch"
+                    type="text"
+                    placeholder="Search User ID"
+                  /> */}
+                  <select
+                    className="filtersSelect"
+                    name="mess"
+                    defaultValue={mess}
+                    onChange={(e) => setMess(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    {messData?.map((mess) => {
+                      return (
+                        <option key={mess?._id} value={mess?._id}>
+                          {mess?.name}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               </div>
               <Scrollbars
                 autoHeight
-                autoHeightMin={300}
-                autoHeightMax={1000}
                 autoHide
+                autoHeightMin={200}
+                autoHeightMax={1000}
               >
                 <table className="table" cellSpacing={0}>
                   <thead>
@@ -202,6 +229,23 @@ const Users = () => {
                   </tbody>
                 </table>
               </Scrollbars>
+              <div className="pagination">
+                {pages.map((i) => {
+                  return (
+                    <button
+                      key={i}
+                      className={
+                        i === pageNumber
+                          ? "activePagination paginationBtn"
+                          : "paginationBtn"
+                      }
+                      onClick={() => setPageNumber(i)}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>

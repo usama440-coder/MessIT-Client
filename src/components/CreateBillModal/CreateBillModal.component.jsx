@@ -20,7 +20,7 @@ const CreateBillModal = ({ setCreateBillModal }) => {
     e.preventDefault();
 
     try {
-      const res = await billingService.createBill(formData, token);
+      await billingService.createBill(formData, token);
       toast.success("Bill created successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");

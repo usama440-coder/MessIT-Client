@@ -32,3 +32,11 @@
     color: var(--green-color);
     cursor: pointer;
 }
+
+.menuTypeDelete {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    color: var(--red-color);
+    cursor: pointer;
+}

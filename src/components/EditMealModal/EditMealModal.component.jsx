@@ -32,7 +32,7 @@ const EditMealModal = ({
       return { itemId: item?._id };
     });
     try {
-      const res = await mealService.updateMeal(
+      await mealService.updateMeal(
         mealData?._id,
         { ...formData, items },
         token

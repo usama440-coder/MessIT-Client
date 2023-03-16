@@ -6,12 +6,14 @@ import { loginUser } from "../../slices/auth.slice";
 import toast from "react-hot-toast";
 import { setRole } from "../../slices/auth.slice";
 import UserRoleModal from "../../components/UserRoleModal/UserRoleModal.component";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({});
   const dispatch = useDispatch();
   const [userRoleModal, setUserRoleModal] = useState(false);
   const btnRef = useRef();
+  const navigate = useNavigate();
 
   // function to handle input change
   const handleChange = (e) => {
@@ -33,11 +35,12 @@ const Login = () => {
           toast.dismiss(loggingToast);
           setUserRoleModal(true);
         } else {
-          dispatch(setRole(data?.user?.role));
+          dispatch(setRole(data?.user?.role[0]));
           toast.dismiss(loggingToast);
+          navigate("/");
           toast.success("Logged in successfully");
+          btnRef.current.disabled = false;
         }
-        btnRef.current.disabled = false;
       })
       .catch((err) => {
         toast.dismiss(loggingToast);

@@ -13,6 +13,7 @@ import Login from "./pages/Login/Login.page";
 import Mess from "./pages/Mess/Mess.page";
 import Protected from "./components/Protected";
 import UserMeals from "./pages/UserMeals/UserMeals.page";
+import Receipt from "./pages/Receipt/Receipt";
 
 const App = () => {
   return (
@@ -23,21 +24,119 @@ const App = () => {
           <Route
             index
             element={
-              <Protected redirectedPath={"/login"}>
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "admin", "cashier", "secretary", "staff"]}
+              >
                 <Dashboard />
               </Protected>
             }
           ></Route>
-          <Route path="/meal" element={<Meal />}></Route>
-          <Route path="/users" element={<Users />}></Route>
-          <Route path="/menu" element={<Menu />}></Route>
-          <Route path="/items" element={<Items />}></Route>
-          <Route path="/profile/:id" element={<Profile />}></Route>
-          <Route path="/billing" element={<Billing />}></Route>
-          <Route path="/about" element={<About />}></Route>
+          <Route
+            path="/meal"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "secretary", "staff"]}
+              >
+                <Meal />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/users"
+            element={
+              <Protected redirectedPath={"/login"} allowedRole={["admin"]}>
+                <Users />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/menu"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "secretary", "staff"]}
+              >
+                <Menu />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/items"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "secretary", "staff"]}
+              >
+                <Items />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/profile"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "admin", "cashier", "secretary", "staff"]}
+              >
+                <Profile />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/billing"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "cashier", "secretary", "staff"]}
+              >
+                <Billing />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/about"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "admin", "cashier", "secretary", "staff"]}
+              >
+                <About />
+              </Protected>
+            }
+          ></Route>
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/mess" element={<Mess />}></Route>
-          <Route path="/userMeals/:id" element={<UserMeals />}></Route>
+          <Route
+            path="/mess"
+            element={
+              <Protected redirectedPath={"/login"} allowedRole={["admin"]}>
+                <Mess />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/userMeals/:id"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "cashier", "secretary", "staff"]}
+              >
+                <UserMeals />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/receipt/:id"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "cashier", "secretary", "staff"]}
+              >
+                <Receipt />
+              </Protected>
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>

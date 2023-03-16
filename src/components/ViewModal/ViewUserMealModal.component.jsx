@@ -36,7 +36,7 @@ const ViewUserMealModal = ({ userMealId, setViewUserMealModal }) => {
         {userMeal?.items?.map((item) => {
           units += item?.itemQuantity * item?.units;
           return (
-            <p>
+            <p key={item?.itemId}>
               {item?.name} ({item?.units}) - {item?.itemQuantity}
             </p>
           );

@@ -23,12 +23,7 @@ const EditBillModal = ({ billData, setEditBillModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await billingService.updateBill(
-        billData?._id,
-        formData,
-        token
-      );
-      console.log(res);
+      await billingService.updateBill(billData?._id, formData, token);
       toast.success("Bill updated successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
@@ -142,6 +137,7 @@ const EditBillModal = ({ billData, setEditBillModal }) => {
 
             <label className="switch">
               <input
+                disabled={formData?.isPaid}
                 type="checkbox"
                 name="isPaid"
                 checked={formData.isPaid}

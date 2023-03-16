@@ -45,10 +45,11 @@ const AddMenuModal = ({ setAddMenuModal }) => {
       return { itemId: item?._id };
     });
     try {
-      const res = await menuService.createMenu({ ...formData, items }, token);
+      await menuService.createMenu({ ...formData, items }, token);
       toast.success("Menu added successfully");
+      setAddMenuModal(false);
     } catch (error) {
-      console.log(error);
+      setAddMenuModal(false);
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };

@@ -4,18 +4,20 @@ import Navbar from "../../components/Navbar/Navbar.component";
 import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateBillModal from "../../components/CreateBillModal/CreateBillModal.component";
 import "./Billing.page.css";
-import { FaEdit, FaTrashAlt, FaReceipt } from "react-icons/fa";
+import { FaEdit, FaReceipt } from "react-icons/fa";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { useEffect, useState } from "react";
 import billingService from "../../services/billingService";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loders";
 import EditBillModal from "../../components/EditBillModal/EditBillModal.component";
+import { Link } from "react-router-dom";
 
 const Billing = () => {
   const [createBillModal, setCreateBillModal] = useState(false);
   const [editBillModal, setEditBillModal] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
+  const role = useSelector((state) => state.auth.role);
   const [loading, setLoading] = useState(false);
   const [bills, setBills] = useState([]);
   const [currBill, setCurrBill] = useState({});
@@ -75,7 +77,12 @@ const Billing = () => {
           ) : (
             ""
           )}
-          <AddButton handleClick={handleClick} title="Create Bill" />
+          {role === "cashier" ? (
+            <AddButton handleClick={handleClick} title="Create Bill" />
+          ) : (
+            ""
+          )}
+
           {loading ? (
             <Loader />
           ) : (
@@ -146,7 +153,7 @@ const Billing = () => {
                   <tbody>
                     {bills?.map((bill) => {
                       return (
-                        <tr>
+                        <tr key={bill._id}>
                           <td>
                             {new Date(bill?.from).toLocaleString(
                               "en-US",
@@ -171,15 +178,25 @@ const Billing = () => {
                             )}
                           </td>
                           <td>
-                            <FaEdit
-                              className="tableIcon greenIcon"
-                              onClick={() => handleEditIcon(bill)}
-                            />
-                            <FaTrashAlt className="tableIcon redIcon" />
-                            <FaReceipt
-                              className="tableIcon orangeIcon"
-                              onClick={() => handleReceiptIcon(bill)}
-                            />
+                            {role === "cashier" ? (
+                              <>
+                                <FaEdit
+                                  className="tableIcon greenIcon"
+                                  onClick={() => handleEditIcon(bill)}
+                                />
+                                <Link
+                                  to={`/receipt/${bill._id}`}
+                                  target="_blank"
+                                >
+                                  <FaReceipt
+                                    className="tableIcon orangeIcon"
+                                    onClick={() => handleReceiptIcon(bill)}
+                                  />
+                                </Link>
+                              </>
+                            ) : (
+                              ""
+                            )}
                           </td>
                         </tr>
                       );
