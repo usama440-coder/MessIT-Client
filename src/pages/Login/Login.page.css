@@ -1,6 +1,5 @@
 .login {
     height: 100vh;
-    border: 2px solid red;
     display: flex;
 }
 
@@ -11,6 +10,7 @@
     margin: auto;
     display: flex;
     box-shadow: var(--box-shadow);
+    padding:50px;
 }
 
 

@@ -16,8 +16,8 @@ const getCurrentMeals = (token) => {
   });
 };
 
-const getPreviousMeals = (token) => {
-  return http.get("/meal/previous", {
+const getPreviousMeals = (token, pageNumber, pageSize) => {
+  return http.get(`/meal/previous?page=${pageNumber}&pageSize=${pageSize}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

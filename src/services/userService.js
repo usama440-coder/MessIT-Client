@@ -36,12 +36,19 @@ const deleteUser = (id, token) => {
 };
 
 const getUser = (id, token) => {
-  console.log(id);
   return http.get(`/users/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+const resetPassword = (user, token, password) => {
+  return http.post("/users/reset-password", { id: user, token, password });
+};
+
+const resetPasswordRequest = (email) => {
+  return http.post("/users/reset-password-link", { email });
 };
 
 const userService = {
@@ -50,6 +57,8 @@ const userService = {
   updateUser,
   deleteUser,
   getUser,
+  resetPassword,
+  resetPasswordRequest,
 };
 
 export default userService;

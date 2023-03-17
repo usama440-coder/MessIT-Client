@@ -8,12 +8,15 @@ const createBill = (data, token) => {
   });
 };
 
-const getBills = (token) => {
-  return http.get("/bill", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const getBills = (token, pageNumber, pageSize, paid) => {
+  return http.get(
+    `/bill?page=${pageNumber}&pageSize=${pageSize}&paid=${paid}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };
 
 const getBalance = (id, token) => {

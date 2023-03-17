@@ -1,0 +1,20 @@
+.resetContainer {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.resetWrapper {
+    background-color: var(--white-color);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;
+    width: 400px;
+    padding: 60px 30px;
+}
+
+.resetWrapper form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

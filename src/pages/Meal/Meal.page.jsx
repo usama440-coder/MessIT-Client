@@ -65,8 +65,13 @@ const Meal = () => {
         const currMeals = await mealService.getCurrentMeals(token);
 
         if (role === "secretary" || role === "staff") {
-          const prevMeals = await mealService.getPreviousMeals(token);
+          const prevMeals = await mealService.getPreviousMeals(
+            token,
+            pageNumber,
+            pageSize
+          );
           setPrevMealsData(prevMeals?.data?.previousMeals);
+          setTotalPages(prevMeals?.data?.totalPages);
         }
 
         if (role === "user") {
@@ -76,7 +81,6 @@ const Meal = () => {
             pageSize
           );
           setUserMeals(userMeals?.data?.userMeals);
-          console.log(userMeals);
           setTotalPages(userMeals?.data?.totalPages);
         }
         setMealTypesData(mealType?.data?.mealTypes);
@@ -186,7 +190,7 @@ const Meal = () => {
                 <>
                   <Scrollbars
                     autoHeight
-                    autoHeightMin={300}
+                    autoHeightMin={100}
                     autoHeightMax={1000}
                     autoHide
                   >
@@ -224,23 +228,6 @@ const Meal = () => {
                       </tbody>
                     </table>
                   </Scrollbars>
-                  <div className="pagination">
-                    {pages.map((i) => {
-                      return (
-                        <button
-                          key={i}
-                          className={
-                            i === pageNumber
-                              ? "activePagination paginationBtn"
-                              : "paginationBtn"
-                          }
-                          onClick={() => setPageNumber(i)}
-                        >
-                          {i + 1}
-                        </button>
-                      );
-                    })}
-                  </div>
                 </>
               ) : (
                 ""
@@ -250,7 +237,7 @@ const Meal = () => {
                 <>
                   <Scrollbars
                     autoHeight
-                    autoHeightMin={300}
+                    autoHeightMin={100}
                     autoHeightMax={1000}
                     autoHide
                   >
@@ -284,27 +271,27 @@ const Meal = () => {
                       </tbody>
                     </table>
                   </Scrollbars>
-                  <div className="pagination">
-                    {pages.map((i) => {
-                      return (
-                        <button
-                          key={i}
-                          className={
-                            i === pageNumber
-                              ? "activePagination paginationBtn"
-                              : "paginationBtn"
-                          }
-                          onClick={() => setPageNumber(i)}
-                        >
-                          {i + 1}
-                        </button>
-                      );
-                    })}
-                  </div>
                 </>
               ) : (
                 " "
               )}
+              <div className="pagination">
+                {pages.map((i) => {
+                  return (
+                    <button
+                      key={i}
+                      className={
+                        i === pageNumber
+                          ? "activePagination paginationBtn"
+                          : "paginationBtn"
+                      }
+                      onClick={() => setPageNumber(i)}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>

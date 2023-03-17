@@ -14,6 +14,7 @@ import Mess from "./pages/Mess/Mess.page";
 import Protected from "./components/Protected";
 import UserMeals from "./pages/UserMeals/UserMeals.page";
 import Receipt from "./pages/Receipt/Receipt";
+import Reset from "./pages/Reset/Reset.page";
 
 const App = () => {
   return (
@@ -137,6 +138,7 @@ const App = () => {
               </Protected>
             }
           ></Route>
+          <Route path="/reset-password" element={<Reset />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

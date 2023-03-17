@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { setRole } from "../../slices/auth.slice";
 import UserRoleModal from "../../components/UserRoleModal/UserRoleModal.component";
 import { useNavigate } from "react-router-dom";
+import userService from "../../services/userService";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({});
@@ -49,6 +50,19 @@ const Login = () => {
       });
   };
 
+  // function to handle reset
+  const handleReset = async () => {
+    const loggingToast = toast.loading("Progressing...");
+    try {
+      const res = await userService.resetPasswordRequest(loginData.email);
+      toast.dismiss(loggingToast);
+      toast.success(res?.data?.message);
+    } catch (error) {
+      toast.dismiss(loggingToast);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <div className="login">
       {userRoleModal ? (
@@ -89,7 +103,9 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="resetPassword">Reset Password</p>
+          <p className="resetPassword" onClick={handleReset}>
+            Reset Password
+          </p>
         </div>
       </div>
     </div>

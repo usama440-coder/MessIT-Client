@@ -22,6 +22,15 @@ const Billing = () => {
   const [bills, setBills] = useState([]);
   const [currBill, setCurrBill] = useState({});
 
+  // states for filteration
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(50);
+  const [paid, setPaid] = useState("");
+
+  // pagination
+  const pages = new Array(totalPages).fill(null).map((v, i) => i);
+
   const handleClick = () => {
     setCreateBillModal(true);
   };
@@ -45,8 +54,14 @@ const Billing = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await billingService.getBills(token);
+        const res = await billingService.getBills(
+          token,
+          pageNumber,
+          pageSize,
+          paid
+        );
         setBills(res?.data?.bills || []);
+        setTotalPages(res?.data?.totalPages);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -55,7 +70,7 @@ const Billing = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, [token, pageNumber, pageSize, paid]);
 
   return (
     <div className="billing">
@@ -89,53 +104,45 @@ const Billing = () => {
             <>
               <div className="tableFilters">
                 <div className="showEntries">
-                  <p className="showEntries">Show Entries</p>
-                  <input className="showEntriesInput" type="text" />
+                  Show Entries
+                  <select
+                    className="filtersSelect"
+                    name="mess"
+                    defaultValue={pageSize}
+                    onChange={(e) => setPageSize(e.target.value)}
+                  >
+                    <option name="select" id="select" value={50}>
+                      50
+                    </option>
+                    <option name="ABE" id="ABE" value={100}>
+                      100
+                    </option>
+                    <option name="CD" id="CD" value={200}>
+                      200
+                    </option>
+                  </select>
                 </div>
                 <div className="filters">
-                  <input
+                  {/* <input
                     className="filtersSearch"
                     type="text"
                     placeholder="Search User ID"
-                  />
-                  <select
-                    className="filtersSelect"
-                    name="mess"
-                    defaultValue={"Mess"}
-                  >
-                    <option name="select" id="select" disabled>
-                      Mess
-                    </option>
-                    <option name="ABE" id="ABE">
-                      ABE
-                    </option>
-                    <option name="CD" id="CD">
-                      CD
-                    </option>
-                    <option name="JH" id="JH">
-                      JH
-                    </option>
-                  </select>
-                  <select
-                    className="filtersSelect"
-                    name="mess"
-                    defaultValue={"Status"}
-                  >
-                    <option name="select" id="select" disabled>
-                      Status
-                    </option>
-                    <option name="ABE" id="ABE">
-                      paid
-                    </option>
-                    <option name="CD" id="CD">
-                      unpaid
-                    </option>
-                  </select>
+                  /> */}
                 </div>
+                <select
+                  className="filtersSelect"
+                  name="mess"
+                  defaultValue={paid}
+                  onChange={(e) => setPaid(e.target.value)}
+                >
+                  <option value="">All</option>
+                  <option value="true">Paid</option>
+                  <option value="false">Unpaid</option>
+                </select>
               </div>
               <Scrollbars
                 autoHeight
-                autoHeightMin={300}
+                autoHeightMin={100}
                 autoHeightMax={1000}
                 autoHide
               >
@@ -204,6 +211,23 @@ const Billing = () => {
                   </tbody>
                 </table>
               </Scrollbars>
+              <div className="pagination">
+                {pages.map((i) => {
+                  return (
+                    <button
+                      key={i}
+                      className={
+                        i === pageNumber
+                          ? "activePagination paginationBtn"
+                          : "paginationBtn"
+                      }
+                      onClick={() => setPageNumber(i)}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>
