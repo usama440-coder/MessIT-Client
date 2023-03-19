@@ -1,5 +1,5 @@
 import "./Navbar.component.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiFillDashboard } from "react-icons/ai";
 import {
   FaUtensils,
@@ -10,6 +10,7 @@ import {
   FaMoneyCheckAlt,
   FaBox,
 } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { BiDish } from "react-icons/bi";
 import { IoLogOut } from "react-icons/io5";
 import { useState } from "react";
@@ -20,6 +21,8 @@ import { logout } from "../../slices/auth.slice";
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const role = useSelector((state) => state.auth.role);
+  const location = useLocation();
+  const activeMenu = location.pathname.split("/")[1];
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -28,9 +31,10 @@ const Navbar = () => {
 
   return (
     <>
-      <button className="toggleBtn" onClick={() => setShowMenu(!showMenu)}>
-        Open
-      </button>
+      <GiHamburgerMenu
+        className={showMenu ? "toggleBtn toggleBtnActive" : "toggleBtn"}
+        onClick={() => setShowMenu(!showMenu)}
+      />
       <div className={showMenu ? "navbar navbarMobile" : "navbar"}>
         <Scrollbars style={{ height: "100%" }} autoHide>
           <div className="navbarContainer">
@@ -38,7 +42,9 @@ const Navbar = () => {
               <h2>MessIT</h2>
             </div>
             <div className="menuItemsContainer">
-              <div className="menuItem active">
+              <div
+                className={activeMenu === "" ? "menuItem active" : "menuItem"}
+              >
                 <Link to="/" className="link">
                   <AiFillDashboard className="navIcon" />
                   <p className="navName">Dashboard</p>
@@ -46,13 +52,21 @@ const Navbar = () => {
               </div>
               {role === "admin" ? (
                 <>
-                  <div className="menuItem">
+                  <div
+                    className={
+                      activeMenu === "users" ? "menuItem active" : "menuItem"
+                    }
+                  >
                     <Link to="/users" className="link">
                       <FaUsers className="navIcon" />
                       <p className="navName">Users</p>
                     </Link>
                   </div>
-                  <div className="menuItem">
+                  <div
+                    className={
+                      activeMenu === "mess" ? "menuItem active" : "menuItem"
+                    }
+                  >
                     <Link to="/mess" className="link">
                       <BiDish className="navIcon" />
                       <p className="navName">Mess</p>
@@ -63,19 +77,33 @@ const Navbar = () => {
                 <>
                   {role !== "cashier" ? (
                     <>
-                      <div className="menuItem">
+                      <div
+                        className={
+                          activeMenu === "meal" ? "menuItem active" : "menuItem"
+                        }
+                      >
                         <Link to="/meal" className="link">
                           <FaUtensils className="navIcon" />
                           <p className="navName">Meal</p>
                         </Link>
                       </div>
-                      <div className="menuItem ">
+                      <div
+                        className={
+                          activeMenu === "menu" ? "menuItem active" : "menuItem"
+                        }
+                      >
                         <Link to="/menu" className="link">
                           <FaBars className="navIcon" />
                           <p className="navName">Menu</p>
                         </Link>
                       </div>
-                      <div className="menuItem">
+                      <div
+                        className={
+                          activeMenu === "items"
+                            ? "menuItem active"
+                            : "menuItem"
+                        }
+                      >
                         <Link to="/items" className="link">
                           <FaBox className="navIcon" />
                           <p className="navName">Items</p>
@@ -85,7 +113,11 @@ const Navbar = () => {
                   ) : (
                     ""
                   )}
-                  <div className="menuItem">
+                  <div
+                    className={
+                      activeMenu === "billing" ? "menuItem active" : "menuItem"
+                    }
+                  >
                     <Link to="/billing" className="link">
                       <FaMoneyCheckAlt className="navIcon" />
                       <p className="navName">Billing</p>
@@ -94,14 +126,22 @@ const Navbar = () => {
                 </>
               )}
 
-              <div className="menuItem">
+              <div
+                className={
+                  activeMenu === "profile" ? "menuItem active" : "menuItem"
+                }
+              >
                 <Link to="/profile" className="link">
                   <FaUser className="navIcon" />
                   <p className="navName">Profile</p>
                 </Link>
               </div>
 
-              <div className="menuItem">
+              <div
+                className={
+                  activeMenu === "about" ? "menuItem active" : "menuItem"
+                }
+              >
                 <Link to="/about" className="link">
                   <FaInfoCircle className="navIcon" />
                   <p className="navName">About</p>

@@ -9,7 +9,7 @@ import { toast } from "react-hot-toast";
 const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
   const token = useSelector((state) => state.auth.user.token);
   const [selectOptions, setSelectOptions] = useState([]);
-  const [formData, setFormData] = useState({ role: "user" });
+  const [inputData, setInputData] = useState({ role: "user" });
 
   // roles in key-value pair
   const roles = [
@@ -34,7 +34,12 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setFormData((values) => ({ ...values, [name]: value }));
+    setInputData((values) => ({ ...values, [name]: value }));
+  };
+
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setInputData((values) => ({ ...values, profile: file }));
   };
 
   const handleSubmit = async (e) => {
@@ -48,13 +53,24 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
         return role.value;
       });
     }
+
+    const formData = new FormData();
+    formData.append("name", inputData.name);
+    formData.append("email", inputData.email);
+    formData.append("contact", inputData.contact);
+    formData.append("mess", inputData.mess);
+    formData.append("profile", inputData.profile);
+    role.forEach((item, index) => {
+      formData.append(`role[${index}]`, item);
+    });
+
     try {
-      const res = await userService.addUser({ ...formData, role }, token);
+      const res = await userService.addUser(formData, token);
       toast.success("User addedd successfully");
       const tempData = {
         ...res.data.user,
         messData: {
-          _id: formData.mess,
+          _id: inputData.mess,
         },
       };
       updateTable(tempData);
@@ -73,17 +89,17 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
           onClick={() => setCreateUserModal(false)}
         />
         <form>
-          <div className="inputContainer">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              onChange={handleChange}
-              value={formData?.name || ""}
-            />
-          </div>
           <div className="splitInputs">
+            <div className="inputContainer">
+              <label>Name</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                onChange={handleChange}
+                value={inputData?.name || ""}
+              />
+            </div>
             <div className="inputContainer">
               <label>Email</label>
               <input
@@ -91,21 +107,12 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
                 name="email"
                 id="email"
                 onChange={handleChange}
-                value={formData?.email || ""}
+                value={inputData?.email || ""}
               />
             </div>
           </div>
+
           <div className="splitInputs">
-            <div className="inputContainer">
-              <label>Contact</label>
-              <input
-                type="text"
-                name="contact"
-                id="contact"
-                onChange={handleChange}
-                value={formData?.contact || ""}
-              />
-            </div>
             <div className="inputContainer">
               <label>Mess</label>
               <select name="mess" onChange={handleChange} defaultValue="none">
@@ -120,6 +127,27 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
                   );
                 })}
               </select>
+            </div>
+            <div className="inputContainer">
+              <label>Contact</label>
+              <input
+                type="text"
+                name="contact"
+                id="contact"
+                onChange={handleChange}
+                value={inputData?.contact || ""}
+              />
+            </div>
+          </div>
+          <div className="splitInputs">
+            <div className="inputContainer">
+              <label>Profile</label>
+              <input
+                type="file"
+                name="profile"
+                accept=".png, .jpg, .jpeg"
+                onChange={handleImage}
+              />
             </div>
           </div>
 

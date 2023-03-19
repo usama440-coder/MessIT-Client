@@ -21,13 +21,24 @@
 .toggleBtn {
     position: absolute;
     z-index: 999;
+    top: 5px;
+    left: 5px;
     display: none;
+    color: var(--primary-color);
+    font-size: 25px;
+    border:none;
+    cursor: pointer;
 }
+
+.toggleBtnActive {
+ color: white;   
+}
+
 
 @media screen and (max-width:1000px) {
     .navbar {
-        position: absolute;
-        transform: translateX(-200%);
+        position: fixed;
+        transform: translateX(-260px);
         z-index: 998;
     }
     .toggleBtn {

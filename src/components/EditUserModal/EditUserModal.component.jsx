@@ -15,7 +15,7 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
   });
 
   const [selectOptions, setSelectOptions] = useState(userRoles || []);
-  const [formData, setFormData] = useState({
+  const [inputData, setInputData] = useState({
     name: userData?.name || "",
     email: userData?.email || "",
     contact: userData?.contact || "",
@@ -47,7 +47,12 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
     let value;
     value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
     name = e.target.name;
-    setFormData((values) => ({ ...values, [name]: value }));
+    setInputData((values) => ({ ...values, [name]: value }));
+  };
+
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setInputData((values) => ({ ...values, profile: file }));
   };
 
   const handleSubmit = async (e) => {
@@ -59,13 +64,19 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
       });
     }
 
+    const formData = new FormData();
+    formData.append("name", inputData.name);
+    formData.append("email", inputData.email);
+    formData.append("contact", inputData.contact);
+    formData.append("mess", inputData.mess);
+    formData.append("profile", inputData.profile);
+    role.forEach((item, index) => {
+      formData.append(`role[${index}]`, item);
+    });
+
     e.preventDefault();
     try {
-      const res = await userService.updateUser(
-        userData._id,
-        { ...formData, role },
-        token
-      );
+      const res = await userService.updateUser(userData._id, formData, token);
       console.log(res);
       toast.success("User updated successfully");
       setEditUserModal(false);
@@ -84,17 +95,17 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
           onClick={() => setEditUserModal(false)}
         />
         <form>
-          <div className="inputContainer">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              onChange={handleChange}
-              value={formData?.name || ""}
-            />
-          </div>
           <div className="splitInputs">
+            <div className="inputContainer">
+              <label>Name</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                onChange={handleChange}
+                value={inputData?.name || ""}
+              />
+            </div>
             <div className="inputContainer">
               <label>Email</label>
               <input
@@ -102,11 +113,20 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
                 name="email"
                 id="email"
                 onChange={handleChange}
-                value={formData?.email || ""}
+                value={inputData?.email || ""}
               />
             </div>
           </div>
 
+          <div className="inputContainer">
+            <label>Profile</label>
+            <input
+              type="file"
+              name="profile"
+              accept=".png, .jpg, .jpeg"
+              onChange={handleImage}
+            />
+          </div>
           <div className="splitInputs">
             <div className="inputContainer">
               <label>Contact</label>
@@ -115,7 +135,7 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
                 name="contact"
                 id="contact"
                 onChange={handleChange}
-                value={formData?.contact || ""}
+                value={inputData?.contact || ""}
               />
             </div>
             <div className="inputContainer">
@@ -169,7 +189,7 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
               <input
                 type="checkbox"
                 name="isActive"
-                checked={formData.isActive}
+                checked={inputData.isActive}
                 id="isActive"
                 onChange={handleChange}
               />
