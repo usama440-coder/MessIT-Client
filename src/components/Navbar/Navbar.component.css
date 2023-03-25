@@ -19,7 +19,7 @@
 } */
 
 .toggleBtn {
-    position: absolute;
+    position: fixed;
     z-index: 999;
     top: 5px;
     left: 5px;

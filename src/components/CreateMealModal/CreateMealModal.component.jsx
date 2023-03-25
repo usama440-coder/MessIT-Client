@@ -1,13 +1,17 @@
 import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./CreateMealModal.component.css";
 import mealService from "../../services/mealService";
+import itemService from "../../services/itemService";
 import { toast } from "react-hot-toast";
+import mealTypeService from "../../services/mealTypeService";
 
-const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
+const CreateMealModal = ({ setCreateMealModal }) => {
   const [selectOptions, setSelectOptions] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
+  const [mealTypesData, setMealTypesData] = useState([]);
   const token = useSelector((state) => state.auth.user.token);
   const [formData, setFormData] = useState({
     type: "",
@@ -21,6 +25,21 @@ const CreateMealModal = ({ mealTypesData, itemsData, setCreateMealModal }) => {
     const value = e.target.value;
     setFormData((values) => ({ ...values, [name]: value }));
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await itemService.getItems(token);
+        const res2 = await mealTypeService.getMealType(token);
+        setItemsData(res?.data?.items || []);
+        setMealTypesData(res2?.data?.mealTypes || []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

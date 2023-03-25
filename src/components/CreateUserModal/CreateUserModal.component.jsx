@@ -10,6 +10,7 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
   const token = useSelector((state) => state.auth.user.token);
   const [selectOptions, setSelectOptions] = useState([]);
   const [inputData, setInputData] = useState({ role: "user" });
+  const [btnLoading, setBtnLoading] = useState(false);
 
   // roles in key-value pair
   const roles = [
@@ -44,7 +45,7 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setBtnLoading(true);
     // convert roles from key-value
     // back to an array of elements
     let role;
@@ -60,7 +61,7 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
     formData.append("contact", inputData.contact);
     formData.append("mess", inputData.mess);
     formData.append("profile", inputData.profile);
-    role.forEach((item, index) => {
+    role?.forEach((item, index) => {
       formData.append(`role[${index}]`, item);
     });
 
@@ -78,6 +79,7 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
     } catch (error) {
       toast.error(error?.response?.data?.message || "User cannot be added");
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -171,8 +173,12 @@ const CreateUserModal = ({ setCreateUserModal, messData, updateTable }) => {
               }}
             />
           </div>
-          <button className="modalBtn" onClick={handleSubmit}>
-            Save
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
+            {btnLoading ? <span>Loading...</span> : <span>Save</span>}
           </button>
         </form>
       </div>

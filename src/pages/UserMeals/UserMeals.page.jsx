@@ -27,7 +27,7 @@ const UserMeals = () => {
         const res = await userMealService.getUserMeal(id, token);
         const res2 = await mealService.getMeal(id, token);
         setUserMealData(res?.data?.userMeal || []);
-        setMealData(res2?.data?.meal[0] || {});
+        setMealData(res2?.data?.meal || {});
       } catch (error) {
         console.log(error);
       }

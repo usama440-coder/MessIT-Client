@@ -24,6 +24,19 @@ const getCashierStats = (token) => {
   });
 };
 
-const statsService = { getUserStats, getSecretaryStats, getCashierStats };
+const getAdminStats = (token) => {
+  return http.get("/stats/admin", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const statsService = {
+  getUserStats,
+  getSecretaryStats,
+  getCashierStats,
+  getAdminStats,
+};
 
 export default statsService;

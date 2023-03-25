@@ -9,9 +9,7 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import { FaRegEye } from "react-icons/fa";
 import "./Meal.page.css";
 import { useState, useEffect } from "react";
-import mealTypeService from "../../services/mealTypeService";
 import { useSelector } from "react-redux";
-import itemService from "../../services/itemService";
 import mealService from "../../services/mealService";
 import Loader from "../../components/Loders";
 import userMealService from "../../services/userMealService";
@@ -24,13 +22,13 @@ const Meal = () => {
   const [loading, setLoading] = useState(false);
   const [currentMealsData, setCurrentMealsData] = useState([]);
   const [prevMealsData, setPrevMealsData] = useState([]);
-  const [mealTypesData, setMealTypesData] = useState([]);
-  const [itemsData, setItemsData] = useState([]);
+  const [userMeals, setUserMeals] = useState([]);
+  const [currUserMeal, setCurrUserMeal] = useState("");
+
+  // modals
   const [createMealTypeModal, setCreateMealTypeModal] = useState(false);
   const [createMealModal, setCreateMealModal] = useState(false);
-  const [userMeals, setUserMeals] = useState([]);
   const [viewUserMealModal, setViewUserMealModal] = useState(false);
-  const [currUserMeal, setCurrUserMeal] = useState("");
 
   // states for filteration
   const [pageNumber, setPageNumber] = useState(0);
@@ -60,8 +58,6 @@ const Meal = () => {
     const fetchData = async () => {
       setLoading(() => true);
       try {
-        const mealType = await mealTypeService.getMealType(token);
-        const items = await itemService.getItems(token);
         const currMeals = await mealService.getCurrentMeals(token);
 
         if (role === "secretary" || role === "staff") {
@@ -83,8 +79,6 @@ const Meal = () => {
           setUserMeals(userMeals?.data?.userMeals);
           setTotalPages(userMeals?.data?.totalPages);
         }
-        setMealTypesData(mealType?.data?.mealTypes);
-        setItemsData(items?.data?.items);
         setCurrentMealsData(currMeals?.data?.currentMeals);
         setLoading(() => false);
       } catch (error) {
@@ -122,11 +116,7 @@ const Meal = () => {
             ""
           )}
           {createMealModal ? (
-            <CreateMealModal
-              mealTypesData={mealTypesData}
-              itemsData={itemsData}
-              setCreateMealModal={setCreateMealModal}
-            />
+            <CreateMealModal setCreateMealModal={setCreateMealModal} />
           ) : (
             ""
           )}
@@ -153,14 +143,7 @@ const Meal = () => {
             <>
               <div className="currentMealContainer">
                 {currentMealsData?.map((meal) => {
-                  return (
-                    <CurrentMeal
-                      key={meal._id}
-                      meal={meal}
-                      mealTypesData={mealTypesData}
-                      itemsData={itemsData}
-                    />
-                  );
+                  return <CurrentMeal key={meal._id} meal={meal} />;
                 })}
               </div>
               <SectionBreak title="Previous meals" />

@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 const CreateMealTypeModal = ({ setCreateMealTypeModal }) => {
   const token = useSelector((state) => state.auth.user.token);
   const [formData, setFormData] = useState({});
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -17,12 +18,16 @@ const CreateMealTypeModal = ({ setCreateMealTypeModal }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setBtnLoading(true);
     try {
       await mealTypeService.createMealType(formData, token);
       toast.success("Meal type added successfully");
+      setCreateMealTypeModal(false);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
+      setCreateMealTypeModal(false);
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -44,7 +49,11 @@ const CreateMealTypeModal = ({ setCreateMealTypeModal }) => {
               value={formData?.type || ""}
             />
           </div>
-          <button className="modalBtn" onClick={handleSubmit}>
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
             Save
           </button>
         </form>

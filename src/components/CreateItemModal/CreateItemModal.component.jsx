@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 const CreateItemModal = ({ setCreateItemModal, updateTable }) => {
   const token = useSelector((state) => state.auth.user.token);
   const [formData, setFormData] = useState({});
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -17,7 +18,7 @@ const CreateItemModal = ({ setCreateItemModal, updateTable }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setBtnLoading(true);
     try {
       const res = await itemService.addItem(formData, token);
       setFormData({});
@@ -27,6 +28,7 @@ const CreateItemModal = ({ setCreateItemModal, updateTable }) => {
     } catch (error) {
       toast.error(error.response.data.message);
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -58,8 +60,12 @@ const CreateItemModal = ({ setCreateItemModal, updateTable }) => {
               onChange={handleChange}
             />
           </div>
-          <button className="modalBtn" onClick={handleSubmit}>
-            Save
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
+            {btnLoading ? <span>Loading...</span> : <span>Save</span>}
           </button>
         </form>
       </div>

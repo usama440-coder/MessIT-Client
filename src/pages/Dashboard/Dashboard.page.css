@@ -55,3 +55,7 @@
 .pieChart {
     flex: 2;
 }
+
+.adminPie {
+    max-width: 500px;
+}

@@ -10,13 +10,14 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ConfirmDeleteMealModal from "../ConfirmModal/ConfirmDeleteMealModal";
 
-const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
+const CurrentMeal = ({ meal }) => {
   const { token, user } = useSelector((state) => state.auth.user);
   const role = useSelector((state) => state.auth.role);
   const [startMealModal, setStartMealModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [editMealModal, setEditMealModal] = useState(false);
   const [confirmDeleteMealModal, setConfirmDeleteMealModal] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const format = {
     month: "short",
     day: "2-digit",
@@ -52,10 +53,10 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setBtnLoading(true);
     let items = [];
     meal?.items.map((item) => {
-      return items.push({ itemId: item._id, itemQuantity: 1 });
+      return items.push({ itemId: item.itemId, itemQuantity: 1 });
     });
 
     try {
@@ -68,6 +69,7 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -112,12 +114,7 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
         ""
       )}
       {editMealModal ? (
-        <EditMealModal
-          setEditMealModal={setEditMealModal}
-          mealTypesData={mealTypesData}
-          itemsData={itemsData}
-          mealData={meal}
-        />
+        <EditMealModal setEditMealModal={setEditMealModal} mealData={meal} />
       ) : (
         ""
       )}
@@ -128,14 +125,17 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
             <p>Type</p>
             <p>{meal?.type}</p>
           </div>
+
           <div className="currentMealDetailsItem">
             <p>Start Time</p>
             <p>{new Date(meal?.validFrom).toLocaleString("en-US", format)}</p>
           </div>
+
           <div className="currentMealDetailsItem">
             <p>End Time</p>
             <p>{new Date(meal?.validUntil).toLocaleString("en-US", format)}</p>
           </div>
+
           <div className="currentMealDetailsItem">
             <p className="currentMealItemsContainer">
               {meal?.items.map((item) => (
@@ -148,6 +148,7 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
               ))}
             </p>
           </div>
+
           {role === "user" ? (
             <div className="closingSwitch">
               <label className="switch">
@@ -172,8 +173,12 @@ const CurrentMeal = ({ meal, mealTypesData, itemsData }) => {
               <>
                 <Timer deadline={meal?.closingTime} />
                 {role === "user" ? (
-                  <button className="currentMealSaveBtn" onClick={handleSubmit}>
-                    Save
+                  <button
+                    disabled={btnLoading}
+                    className="currentMealSaveBtn"
+                    onClick={handleSubmit}
+                  >
+                    {btnLoading ? <span>Wait...</span> : <span>Save</span>}
                   </button>
                 ) : (
                   ""

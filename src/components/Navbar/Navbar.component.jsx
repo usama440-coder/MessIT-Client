@@ -113,17 +113,22 @@ const Navbar = () => {
                   ) : (
                     ""
                   )}
-                  <div
-                    className={
-                      activeMenu === "billing" ? "menuItem active" : "menuItem"
-                    }
-                  >
-                    <Link to="/billing" className="link">
-                      <FaMoneyCheckAlt className="navIcon" />
-                      <p className="navName">Billing</p>
-                    </Link>
-                  </div>
                 </>
+              )}
+
+              {role === "cashier" || role === "user" ? (
+                <div
+                  className={
+                    activeMenu === "billing" ? "menuItem active" : "menuItem"
+                  }
+                >
+                  <Link to="/billing" className="link">
+                    <FaMoneyCheckAlt className="navIcon" />
+                    <p className="navName">Billing</p>
+                  </Link>
+                </div>
+              ) : (
+                ""
               )}
 
               <div

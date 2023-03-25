@@ -11,6 +11,7 @@ import statsService from "../../services/statsService";
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loders";
 import { useSelector } from "react-redux";
+import AdminPieChart from "../../components/PieChart/AdminPieChart.component";
 
 const Dashboard = () => {
   const token = useSelector((state) => state.auth.user.token);
@@ -23,6 +24,20 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        if (role === "admin") {
+          const res = await statsService.getAdminStats(token);
+          setStats({
+            totalUsers: res?.data?.totalUsers || 0,
+            activeUsers: res?.data?.activeUsers || 0,
+            inactiveUsers: res?.data?.inactiveUsers || 0,
+            usersMessData: {
+              totalUsers: res?.data?.usersMessData?.map(
+                (data) => data?.totalUsers
+              ),
+              mess: res?.data?.usersMessData?.map((data) => data?.mess),
+            },
+          });
+        }
         if (role === "user") {
           const res = await statsService.getUserStats(token);
           setStats({
@@ -57,7 +72,7 @@ const Dashboard = () => {
           const res = await statsService.getSecretaryStats(token);
           setStats({
             totalUnits: res?.data?.totalUnits[0]?.totalUnits || 0,
-            totalMeals: res?.data?.totalMeals[0]?.count || 0,
+            totalMeals: res?.data?.totalMeals || 0,
             lastSixMonthsUnits: {
               months: res?.data?.lastSixMonthsUnits?.map((item) => {
                 return new Date(item?.Month).toLocaleString("en-US", {
@@ -116,12 +131,41 @@ const Dashboard = () => {
       <div className="dashboardContainer">
         <div className="dashboardWrapper">
           <Greeting />
-          <SectionBreak title="This month" />
+          {role === "admin" ? (
+            <SectionBreak title="Stats" />
+          ) : (
+            <SectionBreak title="This month" />
+          )}
           {loading ? (
             <Loader />
           ) : (
             <>
               <div className="statsContainer">
+                {role === "admin" ? (
+                  <>
+                    <StatsBox
+                      title={stats.totalUsers}
+                      description="Total Users"
+                      color="purple"
+                      icon="users"
+                    />
+                    <StatsBox
+                      title={stats.activeUsers}
+                      description="Active Users"
+                      color="green"
+                      icon="users"
+                    />
+                    <StatsBox
+                      title={stats.inactiveUsers}
+                      description="Inactive Users"
+                      color="red"
+                      icon="usersSlash"
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
+
                 {role === "user" ? (
                   <>
                     <StatsBox
@@ -187,7 +231,9 @@ const Dashboard = () => {
                   ""
                 )}
               </div>
+
               <SectionBreak title="Comparison" />
+
               <div className="graphContainer">
                 {role === "user" ? (
                   <>
@@ -213,6 +259,13 @@ const Dashboard = () => {
                       <UserPieChart chartData={stats.mealTypes} />
                     </div>
                   </>
+                ) : (
+                  ""
+                )}
+                {role === "admin" ? (
+                  <div className="pieChart adminPie">
+                    <AdminPieChart chartData={stats.usersMessData} />
+                  </div>
                 ) : (
                   ""
                 )}

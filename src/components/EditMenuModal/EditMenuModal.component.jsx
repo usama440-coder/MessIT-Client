@@ -12,6 +12,7 @@ const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
   const [selectOptions, setSelectOptions] = useState(currMenu?.items || []);
   const [mealTypesData, setMealTypesData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: currMenu?.type?._id || "",
     day: currMenu?.day || "",
@@ -40,6 +41,7 @@ const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
   };
 
   const handleSubmit = async (e) => {
+    setBtnLoading(true);
     e.preventDefault();
     const items = selectOptions.map((item) => {
       return { itemId: item?._id };
@@ -52,6 +54,7 @@ const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
       toast.error(error?.response?.data?.message || "Something went wrong");
       setEditMenuModal(false);
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -115,8 +118,12 @@ const EditMenuModal = ({ currMenu, setEditMenuModal }) => {
               }}
             />
           </div>
-          <button className="modalBtn" onClick={handleSubmit}>
-            Save
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
+            {btnLoading ? <span>Loading...</span> : <span>Save</span>}
           </button>
         </form>
       </div>

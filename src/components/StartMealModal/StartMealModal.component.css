@@ -7,7 +7,6 @@
     }
 
     .startMealItemsContainer {
-        border: 2px solid red;
         display: flex;
         gap: 15px;
         padding: 10px 0px 0px 0px;

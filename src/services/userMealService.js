@@ -33,7 +33,6 @@ const updateUserMeal = (id, data, token) => {
 };
 
 const getAllUserMeals = (token, pageNumber, pageSize) => {
-  console.log(`/userMeal?page=${pageNumber}&pageSize=${pageSize}`);
   return http.get(`/userMeal?page=${pageNumber}&pageSize=${pageSize}`, {
     headers: {
       Authorization: `Bearer ${token}`,

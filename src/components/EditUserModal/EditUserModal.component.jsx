@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 
 const EditUserModal = ({ setEditUserModal, messData, userData }) => {
   const token = useSelector((state) => state.auth.user.token);
-
+  const [btnLoading, setBtnLoading] = useState(false);
   // map current user role to key-value pair
   const userRoles = userData?.role.map((role) => {
     return { label: role, value: role };
@@ -57,6 +57,7 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
 
   const handleSubmit = async (e) => {
     // change key-value pair back to an array
+    setBtnLoading(true);
     let role;
     if (selectOptions.length !== 0) {
       role = selectOptions.map((role) => {
@@ -70,20 +71,20 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
     formData.append("contact", inputData.contact);
     formData.append("mess", inputData.mess);
     formData.append("profile", inputData.profile);
+    formData.append("isActive", inputData.isActive);
     role.forEach((item, index) => {
       formData.append(`role[${index}]`, item);
     });
 
     e.preventDefault();
     try {
-      const res = await userService.updateUser(userData._id, formData, token);
-      console.log(res);
+      await userService.updateUser(userData._id, formData, token);
       toast.success("User updated successfully");
       setEditUserModal(false);
-      //   window.location.reload();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -196,8 +197,12 @@ const EditUserModal = ({ setEditUserModal, messData, userData }) => {
               <span className="slider round"></span>
             </label>
           </div>
-          <button className="modalBtn" onClick={handleSubmit}>
-            Save
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
+            {btnLoading ? <span>Loading...</span> : <span>Save</span>}
           </button>
         </form>
       </div>

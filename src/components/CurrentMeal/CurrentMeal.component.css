@@ -9,8 +9,8 @@
     position: relative;
 }
 
+
 .currentMealItem table {
-    /* border: 2px solid green; */
     width: 100%;
     font-size: 16px;
 }
@@ -24,7 +24,6 @@
     padding: 2px 0px;
     color: var(--gray-text);
     vertical-align: top;
-    /* border: 2px solid red; */
 }
 
 .currentMealItem table tr td:nth-child(1) {
@@ -142,10 +141,7 @@
     border-radius: 50%;
   }
 
-
-
   .currentMealDetails {
-    /* border: 2px solid red; */
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -155,18 +151,15 @@
   .currentMealDetailsItem {
     display: flex;
     font-size: 16px;
-    /* border: 2px solid green; */
   }
 
   .currentMealDetailsItem p {
-    /* border: 2px solid green; */
     color: var(--gray-text);
     padding: 2px;
   }
 
   .currentMealDetailsItem p:nth-child(1) {
     font-weight: 500;
-    /* border: 2px solid pink; */
     flex: 1;
   }
 
@@ -187,7 +180,6 @@
 
 
   .tableFooter {
-    /* border: 2px solid red; */
     width: 100%;
     display: flex;
     justify-content: space-between;

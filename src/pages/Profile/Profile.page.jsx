@@ -20,7 +20,10 @@ const Profile = () => {
           <div className="userContainer">
             <div className="userImageRole">
               <img
-                src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                src={
+                  user?.user?.profile?.url ||
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                }
                 alt="profileImage"
               />
               <p>{role}</p>

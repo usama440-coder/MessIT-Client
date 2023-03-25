@@ -4,21 +4,31 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import mealService from "../../services/mealService";
 import { toast } from "react-hot-toast";
+import { useEffect } from "react";
+import itemService from "../../services/itemService";
+import mealTypeService from "../../services/mealTypeService";
 
-const EditMealModal = ({
-  mealTypesData,
-  itemsData,
-  setEditMealModal,
-  mealData,
-}) => {
-  const [selectOptions, setSelectOptions] = useState(mealData?.items || []);
+const EditMealModal = ({ setEditMealModal, mealData }) => {
+  const [selectOptions, setSelectOptions] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
   const token = useSelector((state) => state.auth.user.token);
-  const [formData, setFormData] = useState({
-    type: mealData?.type || "",
-    validFrom: mealData?.validFrom || "",
-    validUntil: mealData?.validUntil || "",
-    closingTime: mealData?.closingTime || "",
-  });
+  const [formData, setFormData] = useState({});
+  const [itemsData, setItemsData] = useState([]);
+  const [mealTypesData, setMealTypesData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res1 = await itemService.getItems(token);
+        const res2 = await mealTypeService.getMealType(token);
+        setItemsData(res1?.data?.items || []);
+        setMealTypesData(res2?.data?.mealTypes || []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [token]);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -28,6 +38,7 @@ const EditMealModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setBtnLoading(true);
     const items = selectOptions.map((item) => {
       return { itemId: item?._id };
     });
@@ -37,10 +48,13 @@ const EditMealModal = ({
         { ...formData, items },
         token
       );
+      setEditMealModal(false);
       toast.success("Meal updated successfully");
     } catch (error) {
+      setEditMealModal(false);
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -55,7 +69,12 @@ const EditMealModal = ({
           <div className="splitInputs">
             <div className="inputContainer">
               <label>Type</label>
-              <select name="type" defaultValue="none" onChange={handleChange}>
+              <select
+                name="type"
+                defaultValue="none"
+                onChange={handleChange}
+                value={formData?.type}
+              >
                 <option value="none" disabled>
                   None
                 </option>
@@ -87,7 +106,6 @@ const EditMealModal = ({
               isMulti
               className="basic-multi-select"
               classNamePrefix="select"
-              defaultValue={mealData?.items}
               placeholder=""
               onChange={setSelectOptions}
               styles={{
@@ -122,8 +140,12 @@ const EditMealModal = ({
             </div>
           </div>
 
-          <button className="modalBtn" onClick={handleSubmit}>
-            Save
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
+            {btnLoading ? <span>Loading...</span> : <span>Save</span>}
           </button>
         </form>
       </div>

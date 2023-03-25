@@ -13,6 +13,7 @@ const AddMenuModal = ({ setAddMenuModal }) => {
   const [selectOptions, setSelectOptions] = useState([]);
   const [mealTypesData, setMealTypesData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "",
     day: "monday",
@@ -40,6 +41,7 @@ const AddMenuModal = ({ setAddMenuModal }) => {
   };
 
   const handleSubmit = async (e) => {
+    setBtnLoading(true);
     e.preventDefault();
     const items = selectOptions.map((item) => {
       return { itemId: item?._id };
@@ -49,9 +51,9 @@ const AddMenuModal = ({ setAddMenuModal }) => {
       toast.success("Menu added successfully");
       setAddMenuModal(false);
     } catch (error) {
-      setAddMenuModal(false);
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
+    setBtnLoading(true);
   };
 
   return (
@@ -114,8 +116,12 @@ const AddMenuModal = ({ setAddMenuModal }) => {
               }}
             />
           </div>
-          <button className="modalBtn" onClick={handleSubmit}>
-            Save
+          <button
+            disabled={btnLoading}
+            className="modalBtn"
+            onClick={handleSubmit}
+          >
+            {btnLoading ? <span>Loading...</span> : <span>Save</span>}
           </button>
         </form>
       </div>

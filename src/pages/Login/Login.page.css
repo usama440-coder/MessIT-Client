@@ -13,10 +13,37 @@
     padding:50px;
 }
 
+@media screen and (max-width: 768px) {
+    .login {
+        background-color: var(--white-color);
+    }
+    .loginContainer {
+        flex-direction: column;
+        box-shadow: none;
+    }
+    .loginLottie {
+        display: none;
+    }
+    .lottie {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .login {
+        background-color: var(--white-color);
+    }
+    .loginContainer {
+        padding: 10px;
+        box-shadow: none;
+    }
+    .loginForm {
+        flex: 1;
+    }
+}
 
 .loginLottie {
     flex: 3;
-    /* background-color: var(--primary-color); */
     border-radius: 10px 0px 0px 10px;
     display: flex;
     justify-content: center;
@@ -55,6 +82,6 @@
 }
 
 .lottie {
-    width: 300px;
+    width: 100%;
 
 }

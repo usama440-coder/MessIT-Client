@@ -1,5 +1,11 @@
 import "./StatsBox.component.css";
-import { FaChartLine, FaMoneyCheckAlt, FaUtensils } from "react-icons/fa";
+import {
+  FaChartLine,
+  FaMoneyCheckAlt,
+  FaUtensils,
+  FaUsers,
+  FaUsersSlash,
+} from "react-icons/fa";
 
 const StatsBox = ({ title, description, color, icon }) => {
   return (
@@ -14,6 +20,10 @@ const StatsBox = ({ title, description, color, icon }) => {
         <FaMoneyCheckAlt className={`statsIcon ${color}`} />
       ) : icon === "meal" ? (
         <FaUtensils className={`statsIcon ${color}`} />
+      ) : icon === "users" ? (
+        <FaUsers className={`statsIcon ${color}`} />
+      ) : icon === "usersSlash" ? (
+        <FaUsersSlash className={`statsIcon ${color}`} />
       ) : (
         ""
       )}
