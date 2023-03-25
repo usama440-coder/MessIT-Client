@@ -1,0 +1,35 @@
+
+.aboutProfile {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--white-color);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;
+    border-left: 5px solid var(--primary-color);
+}
+
+.aboutProfileTitle {
+    text-align: center;
+}
+
+.aboutProfileTitle p{
+    font-weight: 500;
+    color: var(--gray-text)
+}
+
+.aboutProfileDetails {
+    text-align: center;
+    color: var(--gray-text);
+    font-size: 16px;
+}
+
+.aboutProfileTitle img {
+    width: 80px;
+    height: 80px;  
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+}

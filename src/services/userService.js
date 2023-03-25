@@ -43,6 +43,14 @@ const getUser = (id, token) => {
   });
 };
 
+const aboutSection = (token) => {
+  return http.get(`/users/about`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const resetPassword = (user, token, password) => {
   return http.post("/users/reset-password", { id: user, token, password });
 };
@@ -57,6 +65,7 @@ const userService = {
   updateUser,
   deleteUser,
   getUser,
+  aboutSection,
   resetPassword,
   resetPasswordRequest,
 };
