@@ -6,7 +6,7 @@ import SectionBreak from "../../components/SectionBreak/SectionBreak.component";
 import CreateMealModal from "../../components/CreateMealModal/CreateMealModal.component";
 import CreateMealTypeModal from "../../components/CreateMealType/CreateMealTypeModal.component";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import { FaRegEye } from "react-icons/fa";
+import { FaRegEye, FaPencilAlt } from "react-icons/fa";
 import "./Meal.page.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import Loader from "../../components/Loders";
 import userMealService from "../../services/userMealService";
 import { Link } from "react-router-dom";
 import ViewUserMealModal from "../../components/ViewModal/ViewUserMealModal.component";
+import AddReviewModal from "../../components/AddReviewModal/AddReviewModal.component";
 
 const Meal = () => {
   const token = useSelector((state) => state.auth.user.token);
@@ -29,6 +30,7 @@ const Meal = () => {
   const [createMealTypeModal, setCreateMealTypeModal] = useState(false);
   const [createMealModal, setCreateMealModal] = useState(false);
   const [viewUserMealModal, setViewUserMealModal] = useState(false);
+  const [addReviewModal, setAddReviewModal] = useState(false);
 
   // states for filteration
   const [pageNumber, setPageNumber] = useState(0);
@@ -94,6 +96,11 @@ const Meal = () => {
     setViewUserMealModal(true);
   };
 
+  const handleReviewModal = (id) => {
+    setCurrUserMeal(id);
+    setAddReviewModal(true);
+  };
+
   return (
     <div className="meal">
       <Navbar />
@@ -123,6 +130,15 @@ const Meal = () => {
           {createMealTypeModal ? (
             <CreateMealTypeModal
               setCreateMealTypeModal={setCreateMealTypeModal}
+            />
+          ) : (
+            ""
+          )}
+
+          {addReviewModal ? (
+            <AddReviewModal
+              userMealId={currUserMeal}
+              setAddReviewModal={setAddReviewModal}
             />
           ) : (
             ""
@@ -202,6 +218,12 @@ const Meal = () => {
                                   className="tableIcon orangeIcon"
                                   onClick={() =>
                                     handleClick(meal?.mealData?._id)
+                                  }
+                                />
+                                <FaPencilAlt
+                                  className="tableIcon greenIcon"
+                                  onClick={() =>
+                                    handleReviewModal(meal?.mealData?._id)
                                   }
                                 />
                               </td>

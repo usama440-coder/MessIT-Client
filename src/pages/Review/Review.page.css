@@ -1,0 +1,50 @@
+.review {
+    display: flex;
+}
+
+.reviewContainer {
+    padding: 30px 20px;
+    width: 100%;
+}
+
+.reviewWrapper {
+    max-width: 1200px;
+    margin: auto
+}
+
+.reviewBox {
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    margin: 10px 0px;
+    padding: 10px;
+}
+
+.reviewBox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 600px;
+    position: relative;
+    color: var(--gray-text);
+}
+
+.reviewBoxStar {
+    display: flex;
+    align-items: center;
+}
+
+.reviewBoxHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reviewBoxHeader p:nth-child(1) {
+    font-size: 18px;
+}
+
+.reviewBoxItems {
+    display: flex;
+    font-weight: 500;
+    font-style: italic;
+}

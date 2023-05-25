@@ -15,6 +15,7 @@ import Protected from "./components/Protected";
 import UserMeals from "./pages/UserMeals/UserMeals.page";
 import Receipt from "./pages/Receipt/Receipt";
 import Reset from "./pages/Reset/Reset.page";
+import Review from "./pages/Review/Review.page";
 
 const App = () => {
   return (
@@ -30,6 +31,17 @@ const App = () => {
                 allowedRole={["user", "admin", "cashier", "secretary", "staff"]}
               >
                 <Dashboard />
+              </Protected>
+            }
+          ></Route>
+          <Route
+            path="/review"
+            element={
+              <Protected
+                redirectedPath={"/login"}
+                allowedRole={["user", "secretary", "staff"]}
+              >
+                <Review />
               </Protected>
             }
           ></Route>

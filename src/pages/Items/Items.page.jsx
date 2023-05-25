@@ -117,7 +117,6 @@ const Items = () => {
                   <tr>
                     <th>Name</th>
                     <th>Units</th>
-                    <th>Rating</th>
                     {role === "secretary" ? <th></th> : ""}
                   </tr>
                 </thead>
@@ -127,7 +126,6 @@ const Items = () => {
                       <tr key={item._id}>
                         <td>{item.name}</td>
                         <td>{item.units}</td>
-                        <td>{0}</td>
                         {role === "secretary" ? (
                           <td>
                             <FaEdit

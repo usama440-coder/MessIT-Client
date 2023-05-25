@@ -48,6 +48,10 @@ body::-webkit-scrollbar-thumb:hover {
     text-transform: uppercase;
 }
 
+h1 {
+    font-family: 'Exo 2', sans-serif;
+}
+
 body {
     font-family: 'Exo 2', sans-serif;
     font-family: 'Roboto', sans-serif;

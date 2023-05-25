@@ -9,6 +9,7 @@ import {
   FaUsers,
   FaMoneyCheckAlt,
   FaBox,
+  FaPencilAlt,
 } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiDish } from "react-icons/bi";
@@ -95,6 +96,18 @@ const Navbar = () => {
                         <Link to="/menu" className="link">
                           <FaBars className="navIcon" />
                           <p className="navName">Menu</p>
+                        </Link>
+                      </div>
+                      <div
+                        className={
+                          activeMenu === "review"
+                            ? "menuItem active"
+                            : "menuItem"
+                        }
+                      >
+                        <Link to="/review" className="link">
+                          <FaPencilAlt className="navIcon" />
+                          <p className="navName">Reviews</p>
                         </Link>
                       </div>
                       <div
